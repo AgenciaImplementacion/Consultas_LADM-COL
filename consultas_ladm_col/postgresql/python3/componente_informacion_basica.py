@@ -178,7 +178,7 @@ query += """
 	LEFT JOIN t_extdireccion ON terreno.t_id = t_extdireccion.terreno_ext_direccion_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
  )
-SELECT json_agg(info_terreno.terreno) AS info_terrenos FROM info_terreno
+SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
 """
 
 query = query.format(schema= schema, plot_t_id=plot_t_id, parcel_fmi=parcel_fmi, parcel_number=parcel_number, previous_parcel_number=previous_parcel_number)
