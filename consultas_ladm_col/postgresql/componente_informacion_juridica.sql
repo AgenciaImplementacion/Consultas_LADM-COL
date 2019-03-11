@@ -82,13 +82,17 @@ WITH
 	 SELECT derecho_interesados.t_id,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+						                                  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
 	 FROM derecho_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = derecho_interesados.interesado_col_interesado
@@ -113,13 +117,17 @@ WITH
 	 SELECT derecho_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -198,13 +206,17 @@ info_derecho AS (
 	 SELECT restriccion_interesados.t_id,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
 	 FROM restriccion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = restriccion_interesados.interesado_col_interesado
@@ -229,13 +241,17 @@ info_derecho AS (
 	 SELECT restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -314,13 +330,17 @@ info_restriccion AS (
 	 SELECT responsabilidades_interesados.t_id,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_responsabilidad.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
 	 FROM responsabilidades_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = responsabilidades_interesados.interesado_col_interesado
@@ -345,13 +365,17 @@ info_restriccion AS (
 	 SELECT responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_responsabilidad.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -430,13 +454,17 @@ info_responsabilidad AS (
 	 SELECT hipotecas_interesados.t_id,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_hipoteca.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
 	 FROM hipotecas_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = hipotecas_interesados.interesado_col_interesado
@@ -461,13 +489,17 @@ info_responsabilidad AS (
 	 SELECT hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', col_interesado.tipo,
+														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
+														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
 														  'Primer apellido', col_interesado.primer_apellido,
 														  'Primer nombre', col_interesado.primer_nombre,
 														  'Segundo apellido', col_interesado.segundo_apellido,
 														  'Segundo nombre', col_interesado.segundo_nombre,
 														  'Género', col_interesado.genero,
+														  'Razón social',col_interesado.razon_social,
+														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_hipoteca.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
