@@ -127,5 +127,5 @@ WITH
 	LEFT JOIN t_extdireccion ON terreno.t_id = t_extdireccion.terreno_ext_direccion_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
  )
-SELECT json_agg(info_terreno.terreno) AS info_terrenos FROM info_terreno
+SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
 
