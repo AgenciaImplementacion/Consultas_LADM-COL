@@ -134,13 +134,14 @@ if property_card_model:
     """
 else:
     query += """
-    															  'Destinación económica', NULL,
+    														  'Destinación económica', NULL,
         """
 
 query += """
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM {schema}.predio LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
+	 FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
 """
 
 if property_card_model:
@@ -149,8 +150,7 @@ if property_card_model:
     """
 
 query += """
-     LEFT JOIN {schema}.uebaunit ON uebaunit.baunit_predio = info_construccion.baunit_predio
-	 WHERE predio.t_id = info_construccion.baunit_predio and uebaunit.ue_terreno IS NOT NULL
+	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) AND uebaunit.ue_terreno IS NOT NULL
      GROUP BY uebaunit.ue_terreno
  ),
  t_extdireccion AS (

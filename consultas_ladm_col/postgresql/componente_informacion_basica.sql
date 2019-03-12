@@ -93,13 +93,13 @@ WITH
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
 															  'Tipo', predio.tipo,
-															  'Destinación económica', predio_ficha.destinacion_economica,
+    														  'Destinación económica', predio_ficha.destinacion_economica,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM fdm.predio LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
+	 FROM ovejas_fdm_ladmcol_6.predio LEFT JOIN ovejas_fdm_ladmcol_6.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
-     LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = info_construccion.baunit_predio
-	 WHERE predio.t_id = info_construccion.baunit_predio and uebaunit.ue_terreno IS NOT NULL
+	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) AND uebaunit.ue_terreno IS NOT NULL
      GROUP BY uebaunit.ue_terreno
  ),
  t_extdireccion AS (
