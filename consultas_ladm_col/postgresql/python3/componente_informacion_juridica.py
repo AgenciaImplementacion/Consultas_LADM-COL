@@ -167,7 +167,7 @@ WITH
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
-														  'Enlace Soporte Fuente', extarchivo.datos))
+														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM {schema}.col_derecho
 	LEFT JOIN {schema}.rrrfuente ON col_derecho.t_id = rrrfuente.rrr_col_derecho
@@ -291,7 +291,7 @@ info_derecho AS (
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
-														  'Enlace Soporte Fuente', extarchivo.datos))
+														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM {schema}.col_restriccion
 	LEFT JOIN {schema}.rrrfuente ON col_restriccion.t_id = rrrfuente.rrr_col_restriccion
@@ -415,7 +415,7 @@ info_restriccion AS (
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
-														  'Enlace Soporte Fuente', extarchivo.datos))
+														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM {schema}.col_responsabilidad
 	LEFT JOIN {schema}.rrrfuente ON col_responsabilidad.t_id = rrrfuente.rrr_col_responsabilidad
@@ -539,7 +539,7 @@ info_responsabilidad AS (
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
-														  'Enlace Soporte Fuente', extarchivo.datos))
+														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM {schema}.col_hipoteca
 	LEFT JOIN {schema}.rrrfuente ON col_hipoteca.t_id = rrrfuente.rrr_col_hipoteca
