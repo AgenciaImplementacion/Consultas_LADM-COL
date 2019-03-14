@@ -288,5 +288,5 @@ info_puntolevantamiento AS (
     LEFT JOIN info_puntolevantamiento ON terreno.t_id = info_puntolevantamiento.ue_terreno
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
  )
-SELECT json_agg(info_terreno.terreno) AS info_terrenos FROM info_terreno
+SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
 
