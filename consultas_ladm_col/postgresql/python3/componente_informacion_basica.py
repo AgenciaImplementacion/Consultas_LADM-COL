@@ -51,6 +51,7 @@ WITH
 	 SELECT unidadconstruccion.construccion,
 			json_agg(json_build_object('id', unidadconstruccion.t_id,
 							  'attributes', json_build_object('Número de pisos', unidadconstruccion.numero_pisos,
+															  'Área construida', unidadconstruccion.area_construida,
 """
 
 if valuation_model:
@@ -72,7 +73,6 @@ else:
 
 
 query += """
-															  'Área construida', unidadconstruccion.area_construida,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
 															 ))) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
 	 FROM {schema}.unidadconstruccion LEFT JOIN uc_extdireccion ON unidadconstruccion.t_id = uc_extdireccion.unidadconstruccion_ext_direccion_id

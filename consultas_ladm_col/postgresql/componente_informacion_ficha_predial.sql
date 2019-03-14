@@ -63,56 +63,56 @@ WITH
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('Departamento', predio.departamento,
-															  'Municipio', predio.municipio,
-															  'Zona', predio.zona,
-															  'NUPRE', predio.nupre,
-															  'FMI', predio.fmi,
-															  'Número predial', predio.numero_predial,
-															  'Número predial anterior', predio.numero_predial_anterior,
-															  'Tipo', predio.tipo,
-															  'Sector', predio_ficha.sector,
-															  'Localidad/Comuna', predio_ficha.localidad_comuna,
-															  'Barrio', predio_ficha.barrio,
-															  'Manzana/Vereda', predio_ficha.manzana_vereda,
-															  'Terreno', predio_ficha.terreno,
-															  'Condición propiedad', predio_ficha.condicion_propiedad,
-															  'Edificio', predio_ficha.edificio,
-															  'Piso', predio_ficha.piso,
-															  'Unidad', predio_ficha.unidad,
-															  'Estado NUPRE', predio_ficha.estado_nupre,
-															  'Destinación económica', predio_ficha.destinacion_economica,
-															  'Tipo de predio', predio_ficha.predio_tipo,
-															  'Tipo predio público', predio_ficha.tipo_predio_publico,
-															  'Formalidad', predio_ficha.formalidad,
-															  'Estrato', predio_ficha.estrato,
-															  'Clase suelo POT', predio_ficha.clase_suelo_pot,
-															  'Categoría suelo POT', predio_ficha.categoria_suelo_pot,
-															  'Derecho FMI', predio_ficha.derecho_fmi,
-															  'Inscrito RUPTA', predio_ficha.inscrito_rupta,
-															  'Fecha medida RUPTA', predio_ficha.fecha_medida_rupta,
-															  'Anotación FMI RUPTA', predio_ficha.anotacion_fmi_rupta,
-															  'Inscrito protección colectiva', predio_ficha.inscrito_proteccion_colectiva,
-															  'Fecha protección colectiva', predio_ficha.fecha_proteccion_colectiva,
-															  'Anotación FMI protección colectiva', predio_ficha.anotacion_fmi_proteccion_colectiva,
-															  'Inscrito proteccion Ley 1448', predio_ficha.inscrito_proteccion_ley1448,
-															  'Fecha protección ley 1448', predio_ficha.fecha_proteccion_ley1448,
-															  'Anotación FDM Ley 1448', predio_ficha.anotacion_fmi_ley1448,
-															  'Inscripción URT', predio_ficha.inscripcion_urt,
-															  'Fecha de inscripción URT', predio_ficha.fecha_inscripcion_urt,
-															  'Anotación FMI URT', predio_ficha.anotacion_fmi_urt,
-															  'Vigencia fiscal', predio_ficha.vigencia_fiscal,
-															  'Observaciones', predio_ficha.observaciones,
-															  'Fecha visita predial', predio_ficha.fecha_visita_predial,
-															  'Nombre quien atendio', predio_ficha.nombre_quien_atendio,
-															  'Número de documento de quien atendio', predio_ficha.numero_documento_quien_atendio,
-															  'Categoría quien atendio', predio_ficha.categoria_quien_atendio,
-															  'Tipo de documento de quien atendio', predio_ficha.tipo_documento_quien_atendio,
-															  'Nombre encuestador', predio_ficha.nombre_encuestador,
-															  'Número de documento encuestador', predio_ficha.numero_documento_encuestador,
-															  'Tipo de documento encuestador', predio_ficha.tipo_documento_encuestador,
-															  'nucleofamiliar', COALESCE(fpredio_nucleo_familiar.nucleofamiliar, '[]'),
-															  'investigacionmercado', COALESCE(fpredio_investigacion_mercado.investigacionmercado, '[]')
+							  'attributes', json_build_object('Departamento', predio.departamento
+															  , 'Municipio', predio.municipio
+															  , 'Zona', predio.zona
+															  , 'NUPRE', predio.nupre
+															  , 'FMI', predio.fmi
+															  , 'Número predial', predio.numero_predial
+															  , 'Número predial anterior', predio.numero_predial_anterior
+															  , 'Tipo', predio.tipo
+															  , 'Sector', predio_ficha.sector
+															  , 'Localidad/Comuna', predio_ficha.localidad_comuna
+															  , 'Barrio', predio_ficha.barrio
+															  , 'Manzana/Vereda', predio_ficha.manzana_vereda
+															  , 'Terreno', predio_ficha.terreno
+															  , 'Condición propiedad', predio_ficha.condicion_propiedad
+															  , 'Edificio', predio_ficha.edificio
+															  , 'Piso', predio_ficha.piso
+															  , 'Unidad', predio_ficha.unidad
+															  , 'Estado NUPRE', predio_ficha.estado_nupre
+															  , 'Destinación económica', predio_ficha.destinacion_economica
+															  , 'Tipo de predio', predio_ficha.predio_tipo
+															  , 'Tipo predio público', predio_ficha.tipo_predio_publico
+															  , 'Formalidad', predio_ficha.formalidad
+															  , 'Estrato', predio_ficha.estrato
+															  , 'Clase suelo POT', predio_ficha.clase_suelo_pot
+															  , 'Categoría suelo POT', predio_ficha.categoria_suelo_pot
+															  , 'Derecho FMI', predio_ficha.derecho_fmi
+															  , 'Inscrito RUPTA', predio_ficha.inscrito_rupta
+															  , 'Fecha medida RUPTA', predio_ficha.fecha_medida_rupta
+															  , 'Anotación FMI RUPTA', predio_ficha.anotacion_fmi_rupta
+															  , 'Inscrito protección colectiva', predio_ficha.inscrito_proteccion_colectiva
+															  , 'Fecha protección colectiva', predio_ficha.fecha_proteccion_colectiva
+															  , 'Anotación FMI protección colectiva', predio_ficha.anotacion_fmi_proteccion_colectiva
+															  , 'Inscrito proteccion Ley 1448', predio_ficha.inscrito_proteccion_ley1448
+															  , 'Fecha protección ley 1448', predio_ficha.fecha_proteccion_ley1448
+															  , 'Anotación FDM Ley 1448', predio_ficha.anotacion_fmi_ley1448
+															  , 'Inscripción URT', predio_ficha.inscripcion_urt
+															  , 'Fecha de inscripción URT', predio_ficha.fecha_inscripcion_urt
+															  , 'Anotación FMI URT', predio_ficha.anotacion_fmi_urt
+															  , 'Vigencia fiscal', predio_ficha.vigencia_fiscal
+															  , 'Observaciones', predio_ficha.observaciones
+															  , 'Fecha visita predial', predio_ficha.fecha_visita_predial
+															  , 'Nombre quien atendio', predio_ficha.nombre_quien_atendio
+															  , 'Número de documento de quien atendio', predio_ficha.numero_documento_quien_atendio
+															  , 'Categoría quien atendio', predio_ficha.categoria_quien_atendio
+															  , 'Tipo de documento de quien atendio', predio_ficha.tipo_documento_quien_atendio
+															  , 'Nombre encuestador', predio_ficha.nombre_encuestador
+															  , 'Número de documento encuestador', predio_ficha.numero_documento_encuestador
+															  , 'Tipo de documento encuestador', predio_ficha.tipo_documento_encuestador
+															  , 'nucleofamiliar', COALESCE(fpredio_nucleo_familiar.nucleofamiliar, '[]')
+															  , 'investigacionmercado', COALESCE(fpredio_investigacion_mercado.investigacionmercado, '[]')
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id

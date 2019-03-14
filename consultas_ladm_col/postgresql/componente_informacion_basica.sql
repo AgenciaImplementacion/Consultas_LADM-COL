@@ -41,12 +41,12 @@ WITH
 	 SELECT unidadconstruccion.construccion,
 			json_agg(json_build_object('id', unidadconstruccion.t_id,
 							  'attributes', json_build_object('Número de pisos', unidadconstruccion.numero_pisos,
+															  'Área construida', unidadconstruccion.area_construida,
 															  'Número de habitaciones', unidad_construccion.num_habitaciones,
 															  'Número de baños', unidad_construccion.num_banios,
 															  'Número de locales', unidad_construccion.num_locales,
 															  'Uso', unidad_construccion.uso,
 															  'Puntuación', unidad_construccion.puntuacion,
-															  'Área construida', unidadconstruccion.area_construida,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
 															 ))) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
 	 FROM fdm.unidadconstruccion LEFT JOIN uc_extdireccion ON unidadconstruccion.t_id = uc_extdireccion.unidadconstruccion_ext_direccion_id
@@ -93,7 +93,7 @@ WITH
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
 															  'Tipo', predio.tipo,
-    														  'Destinación económica', predio_ficha.destinacion_economica,
+																'Destinación económica', predio_ficha.destinacion_economica,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
