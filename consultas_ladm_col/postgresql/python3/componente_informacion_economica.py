@@ -1,28 +1,42 @@
+property_card_model = True
+valuation_model = True
+
+schema = 'fdm'
+plot_t_id = '13117'
+parcel_fmi = 'NULL'
+parcel_number = 'NULL'
+previous_parcel_number = 'NULL'
+
+query = """
 WITH
  terrenos_seleccionados AS (
-	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
+	SELECT {plot_t_id} AS ue_terreno WHERE '{plot_t_id}' <> 'NULL'
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN '{parcel_fmi}' = 'NULL' THEN  1 = 2 ELSE predio.fmi = '{parcel_fmi}' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN '{parcel_number}' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = '{parcel_number}' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN '{previous_parcel_number}' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = '{previous_parcel_number}' END
  ),
  predios_seleccionados AS (
-	SELECT uebaunit.baunit_predio as t_id FROM fdm.uebaunit WHERE uebaunit.ue_terreno = 13117 AND '13117' <> 'NULL'
+	SELECT uebaunit.baunit_predio as t_id FROM {schema}.uebaunit WHERE uebaunit.ue_terreno = {plot_t_id} AND '{plot_t_id}' <> 'NULL'
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT t_id FROM {schema}.predio WHERE CASE WHEN '{parcel_fmi}' = 'NULL' THEN  1 = 2 ELSE predio.fmi = '{parcel_fmi}' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT t_id FROM {schema}.predio WHERE CASE WHEN '{parcel_number}' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = '{parcel_number}' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT t_id FROM {schema}.predio WHERE CASE WHEN '{previous_parcel_number}' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = '{previous_parcel_number}' END
  ),
  construcciones_seleccionadas AS (
-	 SELECT ue_construccion FROM fdm.uebaunit WHERE uebaunit.baunit_predio IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_construccion IS NOT NULL
+	 SELECT ue_construccion FROM {schema}.uebaunit WHERE uebaunit.baunit_predio IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_construccion IS NOT NULL
  ),
  unidadesconstruccion_seleccionadas AS (
-	 SELECT unidadconstruccion.t_id FROM fdm.unidadconstruccion WHERE unidadconstruccion.construccion IN (SELECT ue_construccion FROM construcciones_seleccionadas)
+	 SELECT unidadconstruccion.t_id FROM {schema}.unidadconstruccion WHERE unidadconstruccion.construccion IN (SELECT ue_construccion FROM construcciones_seleccionadas)
  ),
+"""
+
+if valuation_model:
+    query += """
  info_calificacion_convencional AS (
 	SELECT avaluounidadconstruccion.aucons,
 				json_build_object('id', calificacion_convencional.t_id,
@@ -68,7 +82,7 @@ WITH
 																	   , 'Puntos cerchas', calificacion_convencional.puntos_cerchas
 																	   , 'Total industrial', calificacion_convencional.total_industrial))
 		AS calificacion_convencional
-	FROM fdm.calificacion_convencional LEFT JOIN fdm.avaluounidadconstruccion ON calificacion_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
+	FROM {schema}.calificacion_convencional LEFT JOIN {schema}.avaluounidadconstruccion ON calificacion_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
 	WHERE avaluounidadconstruccion.ucons IN (SELECT * FROM unidadesconstruccion_seleccionadas)
  ),
  info_calificacion_no_convencional AS (
@@ -78,14 +92,21 @@ WITH
 																	   , 'Descripción anexo', calificacion_no_convencional.descripcion_anexo
 																	   , 'Puntaje anexo', calificacion_no_convencional.puntaje_anexo))
 		AS calificacion_no_convencional
-	FROM fdm.calificacion_no_convencional LEFT JOIN fdm.avaluounidadconstruccion ON calificacion_no_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
+	FROM {schema}.calificacion_no_convencional LEFT JOIN {schema}.avaluounidadconstruccion ON calificacion_no_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
 	WHERE avaluounidadconstruccion.ucons IN (SELECT * FROM unidadesconstruccion_seleccionadas)
  ),
+    """
+
+query += """
  info_uc AS (
 	 SELECT unidadconstruccion.construccion,
 			json_agg(json_build_object('id', unidadconstruccion.t_id,
 							  'attributes', json_build_object('Número de pisos', unidadconstruccion.numero_pisos
 															  , 'Área construida', unidadconstruccion.area_construida
+"""
+
+if valuation_model:
+    query += """
 															  , 'Uso',  unidad_construccion.uso
 															  , 'Destino económico',  unidad_construccion.destino_econo
 															  , 'Tipología',  unidad_construccion.tipologia
@@ -115,11 +136,22 @@ WITH
 															  					ELSE
 															  						COALESCE(info_calificacion_no_convencional.calificacion_no_convencional, '[]')
 															  					END
+    """
+
+query += """
 															 ))) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
-	 FROM fdm.unidadconstruccion LEFT JOIN fdm.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
-	 LEFT JOIN fdm.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
+	 FROM {schema}.unidadconstruccion
+"""
+
+if valuation_model:
+    query += """
+	 LEFT JOIN {schema}.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
+	 LEFT JOIN {schema}.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
 	 LEFT JOIN info_calificacion_convencional ON unidad_construccion.t_id = info_calificacion_convencional.aucons
 	 LEFT JOIN info_calificacion_no_convencional ON unidad_construccion.t_id = info_calificacion_no_convencional.aucons
+    """
+
+query += """
 	 WHERE unidadconstruccion.t_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	 GROUP BY unidadconstruccion.construccion
  ),
@@ -129,8 +161,8 @@ WITH
 							  'attributes', json_build_object('Área construcción', construccion.area_construccion,
 															  'unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
 															 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
-	 FROM fdm.construccion LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-     LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
+	 FROM {schema}.construccion LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
+     LEFT JOIN {schema}.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
 	 WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
 	 GROUP BY uebaunit.baunit_predio
  ),
@@ -146,15 +178,33 @@ WITH
 															  'Número predial anterior', predio.numero_predial_anterior,
 															  'Avalúo predio', predio.avaluo_predio,
 															  'Tipo', predio.tipo,
+"""
+
+if property_card_model:
+    query += """
 															  'Destinación económica', predio_ficha.destinacion_economica,
+    """
+
+query += """
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
-	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
+"""
+
+if property_card_model:
+    query += """
+	 LEFT JOIN {schema}.predio_ficha ON predio_ficha.crpredio = predio.t_id
+    """
+
+query += """
 	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) AND uebaunit.ue_terreno IS NOT NULL
      GROUP BY uebaunit.ue_terreno
  ),
+"""
+
+if valuation_model:
+    query += """
  info_zona_homogenea_geoeconomica AS (
 	SELECT terreno.t_id,
 		json_agg(
@@ -163,7 +213,7 @@ WITH
 									                                   'Valor', zona_homogenea_geoeconomica.valor,
 																	   'Identificador', zona_homogenea_geoeconomica.identificador))
 		) FILTER(WHERE zona_homogenea_geoeconomica.t_id IS NOT NULL) AS zona_homogenea_geoeconomica
-	FROM fdm.terreno, fdm.zona_homogenea_geoeconomica
+	FROM {schema}.terreno, {schema}.zona_homogenea_geoeconomica
     WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
 		  st_intersects(terreno.poligono_creado, zona_homogenea_geoeconomica.geometria) = True AND
 		  st_area(st_intersection(terreno.poligono_creado, zona_homogenea_geoeconomica.geometria)) > 0
@@ -176,23 +226,45 @@ WITH
 									   'attributes', json_build_object('Porcentaje', ROUND((st_area(st_intersection(terreno.poligono_creado, zona_homogenea_fisica.geometria))/ st_area(terreno.poligono_creado))::numeric * 100, 2),
 																	   'Identificador', zona_homogenea_fisica.identificador))
 		) FILTER(WHERE zona_homogenea_fisica.t_id IS NOT NULL) AS zona_homogenea_fisica
-	FROM fdm.terreno, fdm.zona_homogenea_fisica
+	FROM {schema}.terreno, {schema}.zona_homogenea_fisica
     WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
 		  st_intersects(terreno.poligono_creado, zona_homogenea_fisica.geometria) = True AND
 		  st_area(st_intersection(terreno.poligono_creado, zona_homogenea_fisica.geometria)) > 0
 	GROUP BY terreno.t_id
  ),
+    """
+
+query += """
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
 						'attributes', json_build_object('Área de terreno', terreno.area_calculada
+"""
+
+if valuation_model:
+    query += """
 														, 'zona_homogenea_geoeconomica', COALESCE(info_zona_homogenea_geoeconomica.zona_homogenea_geoeconomica, '[]')
 														, 'info_zona_homogenea_fisica', COALESCE(info_zona_homogenea_fisica.zona_homogenea_fisica, '[]')
+    """
+
+query += """
 														, 'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
-    FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
+    FROM {schema}.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
+"""
+
+if valuation_model:
+    query += """
     LEFT JOIN info_zona_homogenea_geoeconomica ON info_zona_homogenea_geoeconomica.t_id = terreno.t_id
     LEFT JOIN info_zona_homogenea_fisica ON info_zona_homogenea_fisica.t_id = terreno.t_id
+    """
+
+query += """
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
  )
 SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
+"""
+
+query = query.format(schema= schema, plot_t_id=plot_t_id, parcel_fmi=parcel_fmi, parcel_number=parcel_number, previous_parcel_number=previous_parcel_number)
+
+print(query)
