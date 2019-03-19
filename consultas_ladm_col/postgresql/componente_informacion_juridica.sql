@@ -1,4 +1,7 @@
 WITH
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
 		UNION
@@ -18,46 +21,46 @@ WITH
 	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  derechos_seleccionados AS (
-	 SELECT col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  derecho_interesados AS (
-	 SELECT col_derecho.interesado_col_interesado, col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_derecho.interesado_col_interesado, col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_col_interesado IS NOT NULL
  ),
  derecho_agrupacion_interesados AS (
-	 SELECT col_derecho.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
+	 SELECT DISTINCT col_derecho.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
 	 FROM fdm.col_derecho LEFT JOIN fdm.miembros ON col_derecho.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_la_agrupacion_interesados IS NOT NULL
  ),
   restricciones_seleccionadas AS (
-	 SELECT col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  restriccion_interesados AS (
-	 SELECT col_restriccion.interesado_col_interesado, col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_restriccion.interesado_col_interesado, col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_col_interesado IS NOT NULL
  ),
  restriccion_agrupacion_interesados AS (
-	 SELECT col_restriccion.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
+	 SELECT DISTINCT col_restriccion.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
 	 FROM fdm.col_restriccion LEFT JOIN fdm.miembros ON col_restriccion.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_la_agrupacion_interesados IS NOT NULL
  ),
  responsabilidades_seleccionadas AS (
-	 SELECT col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  responsabilidades_interesados AS (
-	 SELECT col_responsabilidad.interesado_col_interesado, col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_responsabilidad.interesado_col_interesado, col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_col_interesado IS NOT NULL
  ),
  responsabilidades_agrupacion_interesados AS (
-	 SELECT col_responsabilidad.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
+	 SELECT DISTINCT col_responsabilidad.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
 	 FROM fdm.col_responsabilidad LEFT JOIN fdm.miembros ON col_responsabilidad.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_la_agrupacion_interesados IS NOT NULL
  ),
  hipotecas_seleccionadas AS (
-	 SELECT col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  hipotecas_interesados AS (
-	 SELECT col_hipoteca.interesado_col_interesado, col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_hipoteca.interesado_col_interesado, col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_col_interesado IS NOT NULL
  ),
  hipotecas_agrupacion_interesados AS (
-	 SELECT col_hipoteca.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
+	 SELECT DISTINCT col_hipoteca.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
 	 FROM fdm.col_hipoteca LEFT JOIN fdm.miembros ON col_hipoteca.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_la_agrupacion_interesados IS NOT NULL
  ),
@@ -83,15 +86,9 @@ WITH
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
 						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-						                                  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
 														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -117,16 +114,9 @@ WITH
 	 SELECT derecho_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
-														  'Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
@@ -143,7 +133,6 @@ WITH
 		json_build_object('id', la_agrupacion_interesados.t_id,
 						  'attributes', json_build_object('Tipo de agrupación de interesados', la_agrupacion_interesados.ai_tipo,
 														  'Nombre', la_agrupacion_interesados.nombre,
-														  'Tipo', la_agrupacion_interesados.tipo,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_derecho.col_interesado, '[]')))
 	 ) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
 	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_derecho ON la_agrupacion_interesados.t_id = col_derecho.interesado_la_agrupacion_interesados
@@ -158,7 +147,6 @@ WITH
 		json_build_object('id', col_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
-														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM fdm.col_derecho
@@ -176,8 +164,7 @@ info_derecho AS (
 														  'Código registral', col_derecho.codigo_registral_derecho,
 														  'Descripción', col_derecho.descripcion,
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_derecho.col_fuenteadministrativa, '[]'),
-														  'col_interesado', COALESCE(info_interesados_derecho.col_interesado, '[]'),
-														  'la_agrupacion_interesados', COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]')))
+														  CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') ELSE COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') END))
 	 ) FILTER (WHERE col_derecho.t_id IS NOT NULL) AS col_derecho
   FROM fdm.col_derecho LEFT JOIN info_fuentes_administrativas_derecho ON col_derecho.t_id = info_fuentes_administrativas_derecho.t_id
   LEFT JOIN info_interesados_derecho ON col_derecho.t_id = info_interesados_derecho.t_id
@@ -207,15 +194,9 @@ info_derecho AS (
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
 						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
 														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -241,16 +222,9 @@ info_derecho AS (
 	 SELECT restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
-														  'Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
@@ -267,7 +241,6 @@ info_derecho AS (
 		json_build_object('id', la_agrupacion_interesados.t_id,
 						  'attributes', json_build_object('Tipo de agrupación de interesados', la_agrupacion_interesados.ai_tipo,
 														  'Nombre', la_agrupacion_interesados.nombre,
-														  'Tipo', la_agrupacion_interesados.tipo,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_restriccion.col_interesado, '[]')))
 	 ) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
 	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_restriccion ON la_agrupacion_interesados.t_id = col_restriccion.interesado_la_agrupacion_interesados
@@ -282,7 +255,6 @@ info_derecho AS (
 		json_build_object('id', col_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
-														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM fdm.col_restriccion
@@ -296,12 +268,11 @@ info_restriccion AS (
   SELECT col_restriccion.unidad_predio,
 	json_agg(
 		json_build_object('id', col_restriccion.t_id,
-						  'attributes', json_build_object('Tipo de derecho', col_restriccion.tipo,
+						  'attributes', json_build_object('Tipo de restricción', col_restriccion.tipo,
 														  'Código registral', col_restriccion.codigo_registral_restriccion,
 														  'Descripción', col_restriccion.descripcion,
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_restriccion.col_fuenteadministrativa, '[]'),
-														  'col_interesado', COALESCE(info_interesados_restriccion.col_interesado, '[]'),
-														  'la_agrupacion_interesados', COALESCE(info_agrupacion_interesados_restriccion.la_agrupacion_interesados, '[]')))
+														  CASE WHEN info_agrupacion_interesados_restriccion.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_restriccion.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_restriccion.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_restriccion.col_interesado, '[]') END))
 	 ) FILTER (WHERE col_restriccion.t_id IS NOT NULL) AS col_restriccion
   FROM fdm.col_restriccion LEFT JOIN info_fuentes_administrativas_restriccion ON col_restriccion.t_id = info_fuentes_administrativas_restriccion.t_id
   LEFT JOIN info_interesados_restriccion ON col_restriccion.t_id = info_interesados_restriccion.t_id
@@ -331,15 +302,9 @@ info_restriccion AS (
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
 						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
 														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_responsabilidad.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -365,16 +330,9 @@ info_restriccion AS (
 	 SELECT responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
-														  'Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_responsabilidad.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
@@ -391,7 +349,6 @@ info_restriccion AS (
 		json_build_object('id', la_agrupacion_interesados.t_id,
 						  'attributes', json_build_object('Tipo de agrupación de interesados', la_agrupacion_interesados.ai_tipo,
 														  'Nombre', la_agrupacion_interesados.nombre,
-														  'Tipo', la_agrupacion_interesados.tipo,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_responsabilidad.col_interesado, '[]')))
 	 ) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
 	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_responsabilidad ON la_agrupacion_interesados.t_id = col_responsabilidad.interesado_la_agrupacion_interesados
@@ -406,7 +363,6 @@ info_restriccion AS (
 		json_build_object('id', col_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
-														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM fdm.col_responsabilidad
@@ -420,12 +376,11 @@ info_responsabilidad AS (
   SELECT col_responsabilidad.unidad_predio,
 	json_agg(
 		json_build_object('id', col_responsabilidad.t_id,
-						  'attributes', json_build_object('Tipo de derecho', col_responsabilidad.tipo,
+						  'attributes', json_build_object('Tipo de responsabilidad', col_responsabilidad.tipo,
 														  'Código registral', col_responsabilidad.codigo_registral_responsabilidad,
 														  'Descripción', col_responsabilidad.descripcion,
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_responsabilidad.col_fuenteadministrativa, '[]'),
-														  'col_interesado', COALESCE(info_interesados_responsabilidad.col_interesado, '[]'),
-														  'la_agrupacion_interesados', COALESCE(info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados, '[]')))
+														  CASE WHEN info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_responsabilidad.col_interesado, '[]') END))
 	 ) FILTER (WHERE col_responsabilidad.t_id IS NOT NULL) AS col_responsabilidad
   FROM fdm.col_responsabilidad LEFT JOIN info_fuentes_administrativas_responsabilidad ON col_responsabilidad.t_id = info_fuentes_administrativas_responsabilidad.t_id
   LEFT JOIN info_interesados_responsabilidad ON col_responsabilidad.t_id = info_interesados_responsabilidad.t_id
@@ -455,15 +410,9 @@ info_responsabilidad AS (
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
 						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
 														  'Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_hipoteca.interesado_contacto, '[]')))
 	 ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -489,16 +438,9 @@ info_responsabilidad AS (
 	 SELECT hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', col_interesado.t_id,
-						  'attributes', json_build_object('Tipo', col_interesado.tipo,
-														  'Tipo interesado jurídico', col_interesado.tipo_interesado_juridico,
-														  'Documento de identidad', col_interesado.documento_identidad,
+						  'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
 														  'Tipo de documento', col_interesado.tipo_documento,
-														  'Primer apellido', col_interesado.primer_apellido,
-														  'Primer nombre', col_interesado.primer_nombre,
-														  'Segundo apellido', col_interesado.segundo_apellido,
-														  'Segundo nombre', col_interesado.segundo_nombre,
-														  'Género', col_interesado.genero,
-														  'Razón social',col_interesado.razon_social,
+														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'Nombre', col_interesado.nombre,
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_hipoteca.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
@@ -515,7 +457,6 @@ info_responsabilidad AS (
 		json_build_object('id', la_agrupacion_interesados.t_id,
 						  'attributes', json_build_object('Tipo de agrupación de interesados', la_agrupacion_interesados.ai_tipo,
 														  'Nombre', la_agrupacion_interesados.nombre,
-														  'Tipo', la_agrupacion_interesados.tipo,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_hipoteca.col_interesado, '[]')))
 	 ) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
 	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_hipoteca ON la_agrupacion_interesados.t_id = col_hipoteca.interesado_la_agrupacion_interesados
@@ -530,7 +471,6 @@ info_responsabilidad AS (
 		json_build_object('id', col_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', col_fuenteadministrativa.tipo,
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
-														  'Oficialidad fuente administrativa', col_fuenteadministrativa.oficialidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
 	FROM fdm.col_hipoteca
@@ -544,12 +484,11 @@ info_hipoteca AS (
   SELECT col_hipoteca.unidad_predio,
 	json_agg(
 		json_build_object('id', col_hipoteca.t_id,
-						  'attributes', json_build_object('Tipo de derecho', col_hipoteca.tipo,
+						  'attributes', json_build_object('Tipo de hipoteca', col_hipoteca.tipo,
 														  'Código registral', col_hipoteca.codigo_registral_hipoteca,
 														  'Descripción', col_hipoteca.descripcion,
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_hipoteca.col_fuenteadministrativa, '[]'),
-														  'col_interesado', COALESCE(info_interesados_hipoteca.col_interesado, '[]'),
-														  'la_agrupacion_interesados', COALESCE(info_agrupacion_interesados_hipoteca.la_agrupacion_interesados, '[]')))
+														  CASE WHEN info_agrupacion_interesados_hipoteca.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_hipoteca.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_hipoteca.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_hipoteca.col_interesado, '[]') END))
 	 ) FILTER (WHERE col_hipoteca.t_id IS NOT NULL) AS col_hipoteca
   FROM fdm.col_hipoteca LEFT JOIN info_fuentes_administrativas_hipoteca ON col_hipoteca.t_id = info_fuentes_administrativas_hipoteca.t_id
   LEFT JOIN info_interesados_hipoteca ON col_hipoteca.t_id = info_interesados_hipoteca.t_id
@@ -560,7 +499,8 @@ info_hipoteca AS (
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('NUPRE', predio.nupre,
+							  'attributes', json_build_object('Nombre', predio.nombre,
+															  'NUPRE', predio.nupre,
 															  'FMI', predio.fmi,
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
@@ -583,7 +523,7 @@ info_hipoteca AS (
  info_terreno AS (
 	 SELECT terreno.t_id,
 	 json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área de terreno', terreno.area_calculada,
+						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
 	 FROM fdm.terreno LEFT JOIN info_predio ON terreno.t_id = info_predio.ue_terreno

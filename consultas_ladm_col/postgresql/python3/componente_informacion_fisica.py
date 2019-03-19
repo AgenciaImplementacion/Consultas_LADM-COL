@@ -8,6 +8,21 @@ previous_parcel_number = 'NULL'
 
 query = """
 WITH
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
+ unidad_area_registral_terreno AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_registral' LIMIT 1
+ ),
+ unidad_area_construida_uc AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
+ ),
+ unidad_area_privada_construida_uc AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_privada_construida' LIMIT 1
+ ),
+ unidad_longitud_lindero AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'lindero' AND columnname = 'longitud' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT {plot_t_id} AS ue_terreno WHERE '{plot_t_id}' <> 'NULL'
 		UNION
@@ -39,7 +54,6 @@ WITH
 									   'attributes', json_build_object('Tipo de fuente espacial', col_fuenteespacial.Tipo,
 																	   'Estado disponibilidad', col_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
-																	   'Oficialidad', col_fuenteespacial.oficialidad,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))
@@ -75,8 +89,8 @@ else:
     """
 
 query += """
-															  'Área privada construida', unidadconstruccion.area_privada_construida,
-															  'Área construida', unidadconstruccion.area_construida,
+															  CONCAT('Área privada construida' , (SELECT * FROM unidad_area_privada_construida_uc)), unidadconstruccion.area_privada_construida,
+															  CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), unidadconstruccion.area_construida,
 															  'col_fuenteespacial', COALESCE(uc_fuente_espacial.col_fuenteespacial, '[]')
 															 ))) as unidadconstruccion
 	 FROM {schema}.unidadconstruccion LEFT JOIN uc_fuente_espacial ON unidadconstruccion.t_id = uc_fuente_espacial.ue_unidadconstruccion
@@ -99,7 +113,6 @@ query += """
 									   'attributes', json_build_object('Tipo de fuente espacial', col_fuenteespacial.Tipo,
 																	   'Estado disponibilidad', col_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
-																	   'Oficialidad', col_fuenteespacial.oficialidad,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))														   
@@ -146,7 +159,8 @@ query += """
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('NUPRE', predio.nupre,
+							  'attributes', json_build_object('Nombre', predio.nombre,
+															  'NUPRE', predio.nupre,
 															  'FMI', predio.fmi,
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
@@ -167,7 +181,6 @@ query += """
 									   'attributes', json_build_object('Tipo de fuente espacial', col_fuenteespacial.Tipo,
 																	   'Estado disponibilidad', col_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
-																	   'Oficialidad', col_fuenteespacial.oficialidad,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))														   
@@ -181,7 +194,7 @@ query += """
 	SELECT masccl.uep_terreno,
 		json_agg(
 				json_build_object('id', lindero.t_id,
-									   'attributes', json_build_object('Longitud', lindero.longitud))
+									   'attributes', json_build_object(CONCAT('Longitud' , (SELECT * FROM unidad_longitud_lindero)), lindero.longitud))
 		) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
 	FROM {schema}.lindero LEFT JOIN {schema}.masccl ON lindero.t_id = masccl.cclp_lindero
     WHERE masccl.uep_terreno IN (SELECT * FROM terrenos_seleccionados)
@@ -191,7 +204,7 @@ query += """
 	SELECT menos.eu_terreno,
 		json_agg(
 				json_build_object('id', lindero.t_id,
-									   'attributes', json_build_object('Longitud', lindero.longitud))
+									   'attributes', json_build_object(CONCAT('Longitud' , (SELECT * FROM unidad_longitud_lindero)), lindero.longitud))
 		) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
 	FROM {schema}.lindero LEFT JOIN {schema}.menos ON lindero.t_id = menos.ccl_lindero
 	WHERE menos.eu_terreno IN (SELECT * FROM terrenos_seleccionados)
@@ -200,11 +213,11 @@ query += """
  info_punto_lindero_externos AS (
 	 SELECT masccl.uep_terreno,
 	 		json_agg(
-				json_build_object('id', puntoccl.t_id,
+				json_build_object('id', puntolindero.t_id,
 									   'attributes', json_build_object('Nombre', puntolindero.nombre_punto,
-																	   'x', st_x(puntolindero.localizacion_original),
-																	   'y', st_y(puntolindero.localizacion_original),
-																	   'z', st_z(puntolindero.localizacion_original))
+																	   'coordenadas', concat(st_x(puntolindero.localizacion_original), 
+																			         ' ', st_y(puntolindero.localizacion_original), 
+																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
 			)) FILTER(WHERE puntoccl.t_id IS NOT NULL) AS puntolindero
 	 FROM {schema}.puntolindero LEFT JOIN {schema}.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
 	 LEFT JOIN {schema}.lindero ON puntoccl.ccl_lindero = lindero.t_id
@@ -215,11 +228,11 @@ query += """
  info_punto_lindero_internos AS (
 	 SELECT menos.eu_terreno,
 	 		json_agg(
-				json_build_object('id', puntoccl.t_id,
+				json_build_object('id', puntolindero.t_id,
 									   'attributes', json_build_object('Nombre', puntolindero.nombre_punto,
-																	   'x', st_x(puntolindero.localizacion_original),
-																	   'y', st_y(puntolindero.localizacion_original),
-																	   'z', st_z(puntolindero.localizacion_original))
+																	   'coordenadas', concat(st_x(puntolindero.localizacion_original), 
+																					 ' ', st_y(puntolindero.localizacion_original), 
+																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
 			)) FILTER(WHERE puntoccl.t_id IS NOT NULL) AS puntolindero
 	 FROM {schema}.puntolindero LEFT JOIN {schema}.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
 	 LEFT JOIN {schema}.lindero ON puntoccl.ccl_lindero = lindero.t_id
@@ -291,17 +304,17 @@ info_puntolevantamiento AS (
 	SELECT uebaunit_predio.ue_terreno,
 			json_agg(
 					json_build_object('id', puntoslevantamiento_seleccionados.t_id_puntolevantamiento,
-										   'attributes', json_build_object('x', st_x(puntoslevantamiento_seleccionados.localizacion_original),
-																		   'y', st_y(puntoslevantamiento_seleccionados.localizacion_original),
-																		   'z', st_z(puntoslevantamiento_seleccionados.localizacion_original)))
+										   'attributes', json_build_object('coordenadas', concat(st_x(puntoslevantamiento_seleccionados.localizacion_original), 
+																					 ' ', st_y(puntoslevantamiento_seleccionados.localizacion_original), 
+																					 CASE WHEN st_z(puntoslevantamiento_seleccionados.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntoslevantamiento_seleccionados.localizacion_original)) END)))
 			) FILTER(WHERE puntoslevantamiento_seleccionados.t_id_puntolevantamiento IS NOT NULL) AS puntolevantamiento
 	FROM
 	(
-		SELECT puntolevantamiento.t_id AS t_id_puntolevantamiento, puntolevantamiento.localizacion_original, construccion.t_id AS t_id_construccion  FROM fdm.construccion, fdm.puntolevantamiento
-		WHERE ST_Intersects(construccion.poligono_creado, puntolevantamiento.localizacion_original) = True AND construccion.t_id IN (1179, 1180, 1181)
+		SELECT puntolevantamiento.t_id AS t_id_puntolevantamiento, puntolevantamiento.localizacion_original, construccion.t_id AS t_id_construccion  FROM {schema}.construccion, {schema}.puntolevantamiento
+		WHERE ST_Intersects(construccion.poligono_creado, puntolevantamiento.localizacion_original) = True AND construccion.t_id IN (SELECT * from construcciones_seleccionadas)
 	) AS puntoslevantamiento_seleccionados
-	LEFT JOIN fdm.uebaunit AS uebaunit_construccion  ON uebaunit_construccion.ue_construccion = puntoslevantamiento_seleccionados.t_id_construccion
-	LEFT JOIN fdm.uebaunit AS uebaunit_predio ON uebaunit_predio.baunit_predio = uebaunit_construccion.baunit_predio
+	LEFT JOIN {schema}.uebaunit AS uebaunit_construccion  ON uebaunit_construccion.ue_construccion = puntoslevantamiento_seleccionados.t_id_construccion
+	LEFT JOIN {schema}.uebaunit AS uebaunit_predio ON uebaunit_predio.baunit_predio = uebaunit_construccion.baunit_predio
 	WHERE uebaunit_predio.ue_terreno IS NOT NULL AND 
 		  uebaunit_predio.ue_construccion IS NULL AND 
 		  uebaunit_predio.ue_unidadconstruccion IS NULL
@@ -310,21 +323,21 @@ info_puntolevantamiento AS (
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área registral', terreno.area_registral, 
-														'Área calculada', terreno.area_calculada,
+						'attributes', json_build_object(CONCAT('Área registral' , (SELECT * FROM unidad_area_registral_terreno)), terreno.area_registral, 
+														CONCAT('Área calculada' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
+														'predio', COALESCE(info_predio.predio, '[]'),
 														'col_territorioagricola_terreno_territorio_agricola', COALESCE(col_territorioagricola_terreno_territorio_agricola.col_territorioagricola_terreno_territorio_agricola, '[]'),
 														'col_bosqueareasemi_terreno_bosque_area_seminaturale', COALESCE(col_bosqueareasemi_terreno_bosque_area_seminaturale.col_bosqueareasemi_terreno_bosque_area_seminaturale, '[]'),
 														'col_cuerpoagua_terreno_evidencia_cuerpo_agua', COALESCE(col_cuerpoagua_terreno_evidencia_cuerpo_agua.col_cuerpoagua_terreno_evidencia_cuerpo_agua, '[]'),
 														'col_explotaciontipo_terreno_explotacion', COALESCE(col_explotaciontipo_terreno_explotacion.col_explotaciontipo_terreno_explotacion, '[]'),
 														'col_afectacion_terreno_afectacion', COALESCE(col_afectacion_terreno_afectacion.col_afectacion_terreno_afectacion, '[]'),
 														'col_servidumbretipo_terreno_servidumbre', COALESCE(col_servidumbretipo_terreno_servidumbre.col_servidumbretipo_terreno_servidumbre, '[]'),
-														'Linderos externos', COALESCE(info_linderos_externos.lindero, '[]'),
-														'Puntos linderos externos', COALESCE(info_punto_lindero_externos.puntolindero, '[]'),
-														'Linderos internos', COALESCE(info_linderos_internos.lindero, '[]'),
-														'Puntos linderos internos', COALESCE(info_punto_lindero_internos.puntolindero, '[]'),
+														'Linderos externos', json_build_object('lindero', COALESCE(info_linderos_externos.lindero, '[]'),
+																							   'puntolindero', COALESCE(info_punto_lindero_externos.puntolindero, '[]')),
+														'Linderos internos', json_build_object('lindero', COALESCE(info_linderos_internos.lindero, '[]'),
+																							   'puntolindero', COALESCE(info_punto_lindero_internos.puntolindero, '[]')),
 														'puntolevantamiento', COALESCE(info_puntolevantamiento.puntolevantamiento, '[]'),
-														'col_fuenteespacial', COALESCE(t_fuente_espacial.col_fuenteespacial, '[]'),
-														'predio', COALESCE(info_predio.predio, '[]')
+														'col_fuenteespacial', COALESCE(t_fuente_espacial.col_fuenteespacial, '[]')
 													   )) as terreno
     FROM {schema}.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
 	LEFT JOIN t_fuente_espacial ON terreno.t_id = t_fuente_espacial.ue_terreno

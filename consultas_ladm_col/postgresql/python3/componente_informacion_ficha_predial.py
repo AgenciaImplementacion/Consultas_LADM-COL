@@ -9,6 +9,9 @@ previous_parcel_number = 'NULL'
 
 query = """
 WITH
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT {plot_t_id} AS ue_terreno WHERE '{plot_t_id}' <> 'NULL'
 		UNION
@@ -80,7 +83,8 @@ query += """
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('Departamento', predio.departamento
+							  'attributes', json_build_object('Nombre', predio.nombre
+															  , 'Departamento', predio.departamento
 															  , 'Municipio', predio.municipio
 															  , 'Zona', predio.zona
 															  , 'NUPRE', predio.nupre
@@ -92,7 +96,7 @@ query += """
 
 if property_card_model:
     query += """
-															  , 'Sector', predio_ficha.sector
+--															  , 'Sector', predio_ficha.sector
 															  , 'Localidad/Comuna', predio_ficha.localidad_comuna
 															  , 'Barrio', predio_ficha.barrio
 															  , 'Manzana/Vereda', predio_ficha.manzana_vereda
@@ -155,7 +159,7 @@ query += """
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área de terreno', terreno.area_calculada,
+						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
     FROM {schema}.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id

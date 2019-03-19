@@ -1,4 +1,7 @@
 WITH
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
 		UNION
@@ -63,7 +66,8 @@ WITH
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('Departamento', predio.departamento
+							  'attributes', json_build_object('Nombre', predio.nombre
+															  , 'Departamento', predio.departamento
 															  , 'Municipio', predio.municipio
 															  , 'Zona', predio.zona
 															  , 'NUPRE', predio.nupre
@@ -71,7 +75,7 @@ WITH
 															  , 'Número predial', predio.numero_predial
 															  , 'Número predial anterior', predio.numero_predial_anterior
 															  , 'Tipo', predio.tipo
-															  , 'Sector', predio_ficha.sector
+--															  , 'Sector', predio_ficha.sector
 															  , 'Localidad/Comuna', predio_ficha.localidad_comuna
 															  , 'Barrio', predio_ficha.barrio
 															  , 'Manzana/Vereda', predio_ficha.manzana_vereda
@@ -124,7 +128,7 @@ WITH
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área de terreno', terreno.area_calculada,
+						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
     FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id

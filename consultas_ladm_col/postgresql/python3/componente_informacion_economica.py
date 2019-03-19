@@ -9,6 +9,18 @@ previous_parcel_number = 'NULL'
 
 query = """
 WITH
+ unidad_avaluo_predio AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename LIKE 'predio' AND columnname LIKE 'avaluo_predio' LIMIT 1
+ ),
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
+ unidad_area_construida_uc AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
+ ),
+ unidad_valor_m2_construccion_u_c AS (
+	 SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'unidad_construccion' AND columnname = 'valor_m2_construccion' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT {plot_t_id} AS ue_terreno WHERE '{plot_t_id}' <> 'NULL'
 		UNION
@@ -102,7 +114,7 @@ query += """
 	 SELECT unidadconstruccion.construccion,
 			json_agg(json_build_object('id', unidadconstruccion.t_id,
 							  'attributes', json_build_object('Número de pisos', unidadconstruccion.numero_pisos
-															  , 'Área construida', unidadconstruccion.area_construida
+															  , CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), unidadconstruccion.area_construida
 """
 
 if valuation_model:
@@ -111,7 +123,7 @@ if valuation_model:
 															  , 'Destino económico',  unidad_construccion.destino_econo
 															  , 'Tipología',  unidad_construccion.tipologia
 															  , 'Puntuación',  unidad_construccion.puntuacion
-															  , 'Valor m2 construcción',  unidad_construccion.valor_m2_construccion
+															  , CONCAT('Valor m2 construcción' , (SELECT * FROM unidad_valor_m2_construccion_u_c)),  unidad_construccion.valor_m2_construccion
 															  , 'Año construcción',  unidad_construccion.anio_construction
 															  , 'Estado conservación',  unidad_construccion.estado_conservacion
 															  , 'Número de habitaciones',  unidad_construccion.num_habitaciones
@@ -169,14 +181,15 @@ query += """
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('Departamento', predio.departamento,
+							  'attributes', json_build_object('Nombre', predio.nombre,
+															  'Departamento', predio.departamento,
 															  'Municipio', predio.municipio,
 															  'Zona', predio.zona,
 															  'NUPRE', predio.nupre,
 															  'FMI', predio.fmi,
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
-															  'Avalúo predio', predio.avaluo_predio,
+															  CONCAT('Avalúo predio' , (select * from unidad_avaluo_predio)), predio.avaluo_predio,
 															  'Tipo', predio.tipo,
 """
 
@@ -238,13 +251,13 @@ query += """
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área de terreno', terreno.area_calculada
+						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada
 """
 
 if valuation_model:
     query += """
 														, 'zona_homogenea_geoeconomica', COALESCE(info_zona_homogenea_geoeconomica.zona_homogenea_geoeconomica, '[]')
-														, 'info_zona_homogenea_fisica', COALESCE(info_zona_homogenea_fisica.zona_homogenea_fisica, '[]')
+														, 'zona_homogenea_fisica', COALESCE(info_zona_homogenea_fisica.zona_homogenea_fisica, '[]')
     """
 
 query += """

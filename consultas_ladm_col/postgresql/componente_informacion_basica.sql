@@ -1,4 +1,10 @@
 WITH
+ unidad_area_calculada_terreno AS (
+	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+ ),
+ unidad_area_construida_uc AS (
+	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
+ ),
  terrenos_seleccionados AS (
 	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
 		UNION
@@ -41,7 +47,7 @@ WITH
 	 SELECT unidadconstruccion.construccion,
 			json_agg(json_build_object('id', unidadconstruccion.t_id,
 							  'attributes', json_build_object('Número de pisos', unidadconstruccion.numero_pisos,
-															  'Área construida', unidadconstruccion.area_construida,
+															  CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), unidadconstruccion.area_construida,
 															  'Número de habitaciones', unidad_construccion.num_habitaciones,
 															  'Número de baños', unidad_construccion.num_banios,
 															  'Número de locales', unidad_construccion.num_locales,
@@ -85,7 +91,8 @@ WITH
  info_predio AS (
 	 SELECT uebaunit.ue_terreno,
 			json_agg(json_build_object('id', predio.t_id,
-							  'attributes', json_build_object('Departamento', predio.departamento,
+							  'attributes', json_build_object('Nombre', predio.nombre,
+															  'Departamento', predio.departamento,
 															  'Municipio', predio.municipio,
 															  'Zona', predio.zona,
 															  'NUPRE', predio.nupre,
@@ -119,7 +126,7 @@ WITH
  info_terreno AS (
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
-						'attributes', json_build_object('Área de terreno', terreno.area_calculada,
+						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'extdireccion', COALESCE(t_extdireccion.extdireccion, '[]'),
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
