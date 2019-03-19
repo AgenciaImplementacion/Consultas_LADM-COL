@@ -164,7 +164,7 @@ info_derecho AS (
 														  'Código registral', col_derecho.codigo_registral_derecho,
 														  'Descripción', col_derecho.descripcion,
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_derecho.col_fuenteadministrativa, '[]'),
-														  CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') ELSE COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') END))
+														  CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_derecho.col_interesado, '[]') END))
 	 ) FILTER (WHERE col_derecho.t_id IS NOT NULL) AS col_derecho
   FROM fdm.col_derecho LEFT JOIN info_fuentes_administrativas_derecho ON col_derecho.t_id = info_fuentes_administrativas_derecho.t_id
   LEFT JOIN info_interesados_derecho ON col_derecho.t_id = info_interesados_derecho.t_id
