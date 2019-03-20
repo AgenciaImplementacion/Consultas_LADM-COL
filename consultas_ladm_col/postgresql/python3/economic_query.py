@@ -207,8 +207,11 @@ def get_igac_economic_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
         """
 
     query += """
-         WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) AND uebaunit.ue_terreno IS NOT NULL
-         GROUP BY uebaunit.ue_terreno
+         WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) 
+         AND uebaunit.ue_terreno IS NOT NULL
+		 AND uebaunit.ue_construccion IS NULL
+		 AND uebaunit.ue_unidadconstruccion IS NULL
+		 GROUP BY uebaunit.ue_terreno
      ),
     """
 

@@ -118,8 +118,11 @@ info_uc AS (
 															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
      LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = info_construccion.baunit_predio
-	 WHERE predio.t_id = info_construccion.baunit_predio and uebaunit.ue_terreno IS NOT NULL
-     GROUP BY uebaunit.ue_terreno
+	 WHERE predio.t_id = info_construccion.baunit_predio
+	 AND uebaunit.ue_terreno IS NOT NULL
+	 AND uebaunit.ue_construccion IS NULL
+	 AND uebaunit.ue_unidadconstruccion IS NULL
+	 GROUP BY uebaunit.ue_terreno
  ),
  t_fuente_espacial AS (
 	SELECT uefuente.ue_terreno,

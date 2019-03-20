@@ -163,10 +163,10 @@ def get_igac_physical_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
          FROM {schema}.predio LEFT JOIN {schema}.uebaunit ON uebaunit.baunit_predio = predio.t_id
          LEFT JOIN info_construccion ON info_construccion.baunit_predio = predio.t_id
          WHERE predio.t_id IN (SELECT * FROM predios_seleccionados)
-            AND uebaunit.ue_terreno IS NOT NULL
-            AND uebaunit.ue_construccion IS NULL
-            AND uebaunit.ue_unidadconstruccion IS NULL
-         GROUP BY uebaunit.ue_terreno
+         AND uebaunit.ue_terreno IS NOT NULL
+		 AND uebaunit.ue_construccion IS NULL
+		 AND uebaunit.ue_unidadconstruccion IS NULL
+		 GROUP BY uebaunit.ue_terreno
      ),
      t_fuente_espacial AS (
         SELECT uefuente.ue_terreno,

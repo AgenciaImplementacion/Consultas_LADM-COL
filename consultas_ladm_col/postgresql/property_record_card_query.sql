@@ -122,8 +122,11 @@ WITH
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
 	 LEFT JOIN fpredio_nucleo_familiar ON fpredio_nucleo_familiar.fichapredio = predio_ficha.t_id
      LEFT JOIN fpredio_investigacion_mercado ON fpredio_investigacion_mercado.fichapredio = predio_ficha.t_id
-	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados) AND uebaunit.ue_terreno IS NOT NULL
-     GROUP BY uebaunit.ue_terreno
+	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados)
+	 AND uebaunit.ue_terreno IS NOT NULL
+	 AND uebaunit.ue_construccion IS NULL
+	 AND uebaunit.ue_unidadconstruccion IS NULL
+	 GROUP BY uebaunit.ue_terreno
  ),
  info_terreno AS (
 	SELECT terreno.t_id,
