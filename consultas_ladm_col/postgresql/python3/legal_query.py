@@ -91,8 +91,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                               'attributes', json_build_object('Tipo', col_interesado.tipo,
                                                               'Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
          FROM derecho_interesados LEFT JOIN {schema}.col_interesado ON col_interesado.t_id = derecho_interesados.interesado_col_interesado
@@ -119,8 +119,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
             json_build_object('id', col_interesado.t_id,
                               'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
                                                               'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -199,8 +199,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                               'attributes', json_build_object('Tipo', col_interesado.tipo,
                                                               'Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
          FROM restriccion_interesados LEFT JOIN {schema}.col_interesado ON col_interesado.t_id = restriccion_interesados.interesado_col_interesado
@@ -227,8 +227,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
             json_build_object('id', col_interesado.t_id,
                               'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
                                                               'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -307,8 +307,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                               'attributes', json_build_object('Tipo', col_interesado.tipo,
                                                               'Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesados_responsabilidad.interesado_contacto, '[]')))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
          FROM responsabilidades_interesados LEFT JOIN {schema}.col_interesado ON col_interesado.t_id = responsabilidades_interesados.interesado_col_interesado
@@ -335,8 +335,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
             json_build_object('id', col_interesado.t_id,
                               'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_responsabilidad.interesado_contacto, '[]'),
                                                               'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
@@ -415,8 +415,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                               'attributes', json_build_object('Tipo', col_interesado.tipo,
                                                               'Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesados_hipoteca.interesado_contacto, '[]')))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
          FROM hipotecas_interesados LEFT JOIN {schema}.col_interesado ON col_interesado.t_id = hipotecas_interesados.interesado_col_interesado
@@ -443,8 +443,8 @@ def get_igac_legal_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
             json_build_object('id', col_interesado.t_id,
                               'attributes', json_build_object('Documento de identidad', col_interesado.documento_identidad,
                                                               'Tipo de documento', col_interesado.tipo_documento,
-                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'Nombre', col_interesado.nombre,
+                                                              CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
                                                               'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_hipoteca.interesado_contacto, '[]'),
                                                               'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
          ) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
