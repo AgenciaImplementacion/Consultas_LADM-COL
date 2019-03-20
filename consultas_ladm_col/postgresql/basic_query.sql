@@ -84,7 +84,7 @@ WITH
 															 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
 	 FROM fdm.construccion LEFT JOIN c_extdireccion ON construccion.t_id = c_extdireccion.construccion_ext_direccion_id
 	 LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-     LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
+     LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
 	 WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
 	 GROUP BY uebaunit.baunit_predio
  ),

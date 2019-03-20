@@ -137,7 +137,7 @@ def get_igac_physical_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
                                                              ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
       FROM {schema}.construccion LEFT JOIN c_fuente_espacial ON construccion.t_id = c_fuente_espacial.ue_construccion
       LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-      LEFT JOIN {schema}.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
+      LEFT JOIN {schema}.uebaunit ON uebaunit.ue_construccion = construccion.t_id
     """
 
     if valuation_model:

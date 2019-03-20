@@ -100,7 +100,7 @@ info_uc AS (
 														 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
   FROM fdm.construccion LEFT JOIN c_fuente_espacial ON construccion.t_id = c_fuente_espacial.ue_construccion
   LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-  LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
+  LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
   LEFT JOIN fdm.avaluoconstruccion ON avaluoconstruccion.cons = construccion.t_id
   LEFT JOIN fdm.avaluos_v2_2_1avaluos_construccion  ON avaluos_v2_2_1avaluos_construccion.t_id = avaluoconstruccion.cons
   WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)

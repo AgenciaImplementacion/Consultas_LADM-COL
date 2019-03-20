@@ -110,7 +110,7 @@ def get_igac_basic_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                                                                  ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
          FROM {schema}.construccion LEFT JOIN c_extdireccion ON construccion.t_id = c_extdireccion.construccion_ext_direccion_id
          LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-         LEFT JOIN {schema}.uebaunit ON uebaunit.ue_construccion = info_uc.construccion
+         LEFT JOIN {schema}.uebaunit ON uebaunit.ue_construccion = construccion.t_id
          WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
          GROUP BY uebaunit.baunit_predio
      ),
