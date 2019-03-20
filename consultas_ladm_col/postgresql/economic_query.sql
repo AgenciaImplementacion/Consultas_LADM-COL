@@ -2,6 +2,9 @@ WITH
  unidad_avaluo_predio AS (
 	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename LIKE 'predio' AND columnname LIKE 'avaluo_predio' LIMIT 1
  ),
+ unidad_avaluo_terreno AS (
+	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'avaluo_terreno' LIMIT 1
+ ),
  unidad_area_calculada_terreno AS (
 	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
  ),
@@ -199,6 +202,7 @@ WITH
 	SELECT terreno.t_id,
       json_build_object('id', terreno.t_id,
 						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada
+													    , CONCAT('Avalúo terreno', (SELECT * FROM unidad_avaluo_terreno)), terreno.Avaluo_Terreno
 														, 'zona_homogenea_geoeconomica', COALESCE(info_zona_homogenea_geoeconomica.zona_homogenea_geoeconomica, '[]')
 														, 'zona_homogenea_fisica', COALESCE(info_zona_homogenea_fisica.zona_homogenea_fisica, '[]')
 														, 'predio', COALESCE(info_predio.predio, '[]')

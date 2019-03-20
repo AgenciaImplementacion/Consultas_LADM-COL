@@ -5,6 +5,9 @@ def get_igac_economic_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
      unidad_avaluo_predio AS (
          SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename LIKE 'predio' AND columnname LIKE 'avaluo_predio' LIMIT 1
      ),
+     unidad_avaluo_terreno AS (
+         SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'avaluo_terreno' LIMIT 1
+     ),
      unidad_area_calculada_terreno AS (
          SELECT ' [' || setting || ']' FROM {schema}.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
      ),
@@ -245,6 +248,7 @@ def get_igac_economic_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
         SELECT terreno.t_id,
           json_build_object('id', terreno.t_id,
                             'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada
+                                                            , CONCAT('Avalúo terreno', (SELECT * FROM unidad_avaluo_terreno)), terreno.Avaluo_Terreno
     """
 
     if valuation_model:
