@@ -38,6 +38,22 @@ WITH
  unidadesconstruccion_seleccionadas AS (
 	 SELECT unidadconstruccion.t_id FROM fdm.unidadconstruccion WHERE unidadconstruccion.construccion IN (SELECT ue_construccion FROM construcciones_seleccionadas)
  ),
+punto_lindero_externos_seleccionados AS (
+	 SELECT DISTINCT masccl.uep_terreno, puntolindero.t_id
+	 FROM fdm.puntolindero LEFT JOIN fdm.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
+	 LEFT JOIN fdm.lindero ON puntoccl.ccl_lindero = lindero.t_id
+	 LEFT JOIN fdm.masccl ON lindero.t_id = masccl.cclp_lindero
+	 WHERE masccl.uep_terreno IN (SELECT * FROM terrenos_seleccionados)
+	 ORDER BY masccl.uep_terreno, puntolindero.t_id
+),
+info_punto_lindero_internos_seleccionados AS (
+	SELECT DISTINCT menos.eu_terreno, puntolindero.t_id
+	FROM fdm.puntolindero LEFT JOIN fdm.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
+	LEFT JOIN fdm.lindero ON puntoccl.ccl_lindero = lindero.t_id
+	LEFT JOIN fdm.menos ON lindero.t_id = menos.ccl_lindero
+	WHERE menos.eu_terreno IN (SELECT * FROM terrenos_seleccionados)
+  ORDER BY menos.eu_terreno, puntolindero.t_id
+),
  uc_fuente_espacial AS (
 	SELECT uefuente.ue_unidadconstruccion,
 		json_agg(
@@ -160,35 +176,31 @@ info_uc AS (
 	WHERE menos.eu_terreno IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY menos.eu_terreno
  ),
- info_punto_lindero_externos AS (
-	 SELECT masccl.uep_terreno,
+info_punto_lindero_externos AS (
+	SELECT punto_lindero_externos_seleccionados.uep_terreno,
 	 		json_agg(
 				json_build_object('id', puntolindero.t_id,
 									   'attributes', json_build_object('Nombre', puntolindero.nombre_punto,
 																	   'coordenadas', concat(st_x(puntolindero.localizacion_original),
 																					 ' ', st_y(puntolindero.localizacion_original),
 																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
-			)) FILTER(WHERE puntoccl.t_id IS NOT NULL) AS puntolindero
-	 FROM fdm.puntolindero LEFT JOIN fdm.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
-	 LEFT JOIN fdm.lindero ON puntoccl.ccl_lindero = lindero.t_id
-	 LEFT JOIN fdm.masccl ON lindero.t_id = masccl.cclp_lindero
-     WHERE masccl.uep_terreno IN (SELECT * FROM terrenos_seleccionados)
-	 GROUP BY masccl.uep_terreno
+			)) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
+	FROM fdm.puntolindero LEFT JOIN punto_lindero_externos_seleccionados ON puntolindero.t_id = punto_lindero_externos_seleccionados.t_id
+	WHERE punto_lindero_externos_seleccionados.uep_terreno IS NOT NULL
+	GROUP BY punto_lindero_externos_seleccionados.uep_terreno
  ),
  info_punto_lindero_internos AS (
-	 SELECT menos.eu_terreno,
+	 SELECT info_punto_lindero_internos_seleccionados.eu_terreno,
 	 		json_agg(
 				json_build_object('id', puntolindero.t_id,
 									   'attributes', json_build_object('Nombre', puntolindero.nombre_punto,
 																	   'coordenadas', concat(st_x(puntolindero.localizacion_original),
 																					 ' ', st_y(puntolindero.localizacion_original),
 																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
-			)) FILTER(WHERE puntoccl.t_id IS NOT NULL) AS puntolindero
-	 FROM fdm.puntolindero LEFT JOIN fdm.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
-	 LEFT JOIN fdm.lindero ON puntoccl.ccl_lindero = lindero.t_id
-	 LEFT JOIN fdm.menos ON lindero.t_id = menos.ccl_lindero
-     WHERE menos.eu_terreno IN (SELECT * FROM terrenos_seleccionados)
-	 GROUP BY menos.eu_terreno
+			)) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
+	 FROM fdm.puntolindero LEFT JOIN info_punto_lindero_internos_seleccionados ON puntolindero.t_id = info_punto_lindero_internos_seleccionados.t_id
+     WHERE info_punto_lindero_internos_seleccionados.eu_terreno IS NOT NULL
+	 GROUP BY info_punto_lindero_internos_seleccionados.eu_terreno
  ),
 col_bosqueareasemi_terreno_bosque_area_seminaturale AS (
 	SELECT terreno_bosque_area_seminaturale,
