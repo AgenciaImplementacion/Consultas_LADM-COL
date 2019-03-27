@@ -118,7 +118,7 @@ info_uc AS (
   LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
   LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
   LEFT JOIN fdm.avaluoconstruccion ON avaluoconstruccion.cons = construccion.t_id
-  LEFT JOIN fdm.avaluos_v2_2_1avaluos_construccion  ON avaluos_v2_2_1avaluos_construccion.t_id = avaluoconstruccion.cons
+  LEFT JOIN fdm.avaluos_v2_2_1avaluos_construccion  ON avaluos_v2_2_1avaluos_construccion.t_id = avaluoconstruccion.acons
   WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
   GROUP BY uebaunit.baunit_predio
  ),

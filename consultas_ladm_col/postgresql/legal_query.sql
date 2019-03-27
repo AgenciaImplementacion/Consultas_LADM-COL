@@ -77,7 +77,7 @@ WITH
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)))
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN derecho_interesados ON derecho_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM fdm.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT derecho_interesados.interesado_col_interesado FROM derecho_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -185,7 +185,7 @@ info_derecho AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)))
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN restriccion_interesados ON restriccion_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM fdm.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT restriccion_interesados.interesado_col_interesado FROM restriccion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -293,7 +293,7 @@ info_restriccion AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)))
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN responsabilidades_interesados ON responsabilidades_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM fdm.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT responsabilidades_interesados.interesado_col_interesado FROM responsabilidades_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -401,7 +401,7 @@ info_responsabilidad AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)))
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN hipotecas_interesados ON hipotecas_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM fdm.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT hipotecas_interesados.interesado_col_interesado FROM hipotecas_interesados)
 		GROUP BY interesado_contacto.interesado
  ),

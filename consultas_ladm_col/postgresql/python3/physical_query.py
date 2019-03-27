@@ -159,7 +159,7 @@ def get_igac_physical_query(schema, plot_t_id, parcel_fmi, parcel_number, previo
     if valuation_model:
         query += """
         LEFT JOIN {schema}.avaluoconstruccion ON avaluoconstruccion.cons = construccion.t_id
-        LEFT JOIN {schema}.avaluos_v2_2_1avaluos_construccion  ON avaluos_v2_2_1avaluos_construccion.t_id = avaluoconstruccion.cons
+        LEFT JOIN {schema}.avaluos_v2_2_1avaluos_construccion  ON avaluos_v2_2_1avaluos_construccion.t_id = avaluoconstruccion.acons
         """
 
     query += """
