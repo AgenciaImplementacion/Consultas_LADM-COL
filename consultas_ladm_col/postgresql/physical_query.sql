@@ -46,7 +46,7 @@ punto_lindero_externos_seleccionados AS (
 	 WHERE masccl.uep_terreno IN (SELECT * FROM terrenos_seleccionados)
 	 ORDER BY masccl.uep_terreno, puntolindero.t_id
 ),
-info_punto_lindero_internos_seleccionados AS (
+punto_lindero_internos_seleccionados AS (
 	SELECT DISTINCT menos.eu_terreno, puntolindero.t_id
 	FROM fdm.puntolindero LEFT JOIN fdm.puntoccl ON puntolindero.t_id = puntoccl.punto_puntolindero
 	LEFT JOIN fdm.lindero ON puntoccl.ccl_lindero = lindero.t_id
@@ -64,7 +64,7 @@ info_punto_lindero_internos_seleccionados AS (
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))
-		) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
+		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM fdm.uefuente LEFT JOIN fdm.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
     LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
 	WHERE uefuente.ue_unidadconstruccion IN (SELECT * FROM unidadesconstruccion_seleccionadas)
@@ -83,7 +83,7 @@ info_uc AS (
 															  CONCAT('Área privada construida' , (SELECT * FROM unidad_area_privada_construida_uc)), unidadconstruccion.area_privada_construida,
 															  CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), unidadconstruccion.area_construida,
 															  'col_fuenteespacial', COALESCE(uc_fuente_espacial.col_fuenteespacial, '[]')
-															 ))) as unidadconstruccion
+															 )) ORDER BY unidadconstruccion.t_id) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL) AS unidadconstruccion
 	 FROM fdm.unidadconstruccion LEFT JOIN uc_fuente_espacial ON unidadconstruccion.t_id = uc_fuente_espacial.ue_unidadconstruccion
 	 LEFT JOIN fdm.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
 	 LEFT JOIN fdm.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
@@ -100,7 +100,7 @@ info_uc AS (
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))
-		) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
+		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM fdm.uefuente LEFT JOIN fdm.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
 	LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
 	WHERE uefuente.ue_construccion IN (SELECT * FROM construcciones_seleccionadas)
@@ -113,7 +113,7 @@ info_uc AS (
 														  'Ńúmero de pisos', avaluos_v2_2_1avaluos_construccion.numero_pisos,
 														  'col_fuenteespacial', COALESCE(c_fuente_espacial.col_fuenteespacial, '[]'),
 														  'unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
-														 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
+														 )) ORDER BY construccion.t_id) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
   FROM fdm.construccion LEFT JOIN c_fuente_espacial ON construccion.t_id = c_fuente_espacial.ue_construccion
   LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
   LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
@@ -131,7 +131,7 @@ info_uc AS (
 															  'Número predial', predio.numero_predial,
 															  'Número predial anterior', predio.numero_predial_anterior,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
-															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
+															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
      LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = info_construccion.baunit_predio
 	 WHERE predio.t_id = info_construccion.baunit_predio
@@ -150,7 +150,7 @@ info_uc AS (
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
 																	   'Enlace fuente espacial', extarchivo.datos))
-		) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
+		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM fdm.uefuente LEFT JOIN fdm.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
     LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
 	WHERE uefuente.ue_terreno IN (SELECT * FROM terrenos_seleccionados)
@@ -161,7 +161,7 @@ info_uc AS (
 		json_agg(
 				json_build_object('id', lindero.t_id,
 									   'attributes', json_build_object(CONCAT('Longitud' , (SELECT * FROM unidad_longitud_lindero)), lindero.longitud))
-		) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
+		ORDER BY lindero.t_id) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
 	FROM fdm.lindero LEFT JOIN fdm.masccl ON lindero.t_id = masccl.cclp_lindero
     WHERE masccl.uep_terreno IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY masccl.uep_terreno
@@ -171,7 +171,7 @@ info_uc AS (
 		json_agg(
 				json_build_object('id', lindero.t_id,
 									   'attributes', json_build_object(CONCAT('Longitud' , (SELECT * FROM unidad_longitud_lindero)), lindero.longitud))
-		) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
+		ORDER BY lindero.t_id) FILTER(WHERE lindero.t_id IS NOT NULL) AS lindero
 	FROM fdm.lindero LEFT JOIN fdm.menos ON lindero.t_id = menos.ccl_lindero
 	WHERE menos.eu_terreno IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY menos.eu_terreno
@@ -184,30 +184,30 @@ info_punto_lindero_externos AS (
 																	   'coordenadas', concat(st_x(puntolindero.localizacion_original),
 																					 ' ', st_y(puntolindero.localizacion_original),
 																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
-			)) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
+			) ORDER BY puntolindero.t_id) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
 	FROM fdm.puntolindero LEFT JOIN punto_lindero_externos_seleccionados ON puntolindero.t_id = punto_lindero_externos_seleccionados.t_id
 	WHERE punto_lindero_externos_seleccionados.uep_terreno IS NOT NULL
 	GROUP BY punto_lindero_externos_seleccionados.uep_terreno
  ),
  info_punto_lindero_internos AS (
-	 SELECT info_punto_lindero_internos_seleccionados.eu_terreno,
+	 SELECT punto_lindero_internos_seleccionados.eu_terreno,
 	 		json_agg(
 				json_build_object('id', puntolindero.t_id,
 									   'attributes', json_build_object('Nombre', puntolindero.nombre_punto,
 																	   'coordenadas', concat(st_x(puntolindero.localizacion_original),
 																					 ' ', st_y(puntolindero.localizacion_original),
 																					 CASE WHEN st_z(puntolindero.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntolindero.localizacion_original)) END))
-			)) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
-	 FROM fdm.puntolindero LEFT JOIN info_punto_lindero_internos_seleccionados ON puntolindero.t_id = info_punto_lindero_internos_seleccionados.t_id
-     WHERE info_punto_lindero_internos_seleccionados.eu_terreno IS NOT NULL
-	 GROUP BY info_punto_lindero_internos_seleccionados.eu_terreno
+			) ORDER BY puntolindero.t_id) FILTER(WHERE puntolindero.t_id IS NOT NULL) AS puntolindero
+	 FROM fdm.puntolindero LEFT JOIN punto_lindero_internos_seleccionados ON puntolindero.t_id = punto_lindero_internos_seleccionados.t_id
+     WHERE punto_lindero_internos_seleccionados.eu_terreno IS NOT NULL
+	 GROUP BY punto_lindero_internos_seleccionados.eu_terreno
  ),
 col_bosqueareasemi_terreno_bosque_area_seminaturale AS (
 	SELECT terreno_bosque_area_seminaturale,
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_bosqueareasemi_terreno_bosque_area_seminaturale
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_bosqueareasemi_terreno_bosque_area_seminaturale
 	FROM fdm.col_bosqueareasemi_terreno_bosque_area_seminaturale
     WHERE terreno_bosque_area_seminaturale IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_bosque_area_seminaturale
@@ -217,7 +217,7 @@ col_territorioagricola_terreno_territorio_agricola AS (
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_territorioagricola_terreno_territorio_agricola
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_territorioagricola_terreno_territorio_agricola
 	FROM fdm.col_territorioagricola_terreno_territorio_agricola
     WHERE terreno_territorio_agricola IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_territorio_agricola
@@ -227,7 +227,7 @@ col_cuerpoagua_terreno_evidencia_cuerpo_agua AS (
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_cuerpoagua_terreno_evidencia_cuerpo_agua
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_cuerpoagua_terreno_evidencia_cuerpo_agua
 	FROM fdm.col_cuerpoagua_terreno_evidencia_cuerpo_agua
     WHERE terreno_evidencia_cuerpo_agua IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_evidencia_cuerpo_agua
@@ -237,7 +237,7 @@ col_explotaciontipo_terreno_explotacion AS (
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_explotaciontipo_terreno_explotacion
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_explotaciontipo_terreno_explotacion
 	FROM fdm.col_explotaciontipo_terreno_explotacion
     WHERE terreno_explotacion IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_explotacion
@@ -247,7 +247,7 @@ col_afectacion_terreno_afectacion AS (
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_afectacion_terreno_afectacion
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_afectacion_terreno_afectacion
 	FROM fdm.col_afectacion_terreno_afectacion
     WHERE terreno_afectacion IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_afectacion
@@ -257,7 +257,7 @@ col_servidumbretipo_terreno_servidumbre AS (
 		json_agg(
 				json_build_object('id', t_id,
 									   'attributes', json_build_object('avalue', avalue))
-		) FILTER(WHERE t_id IS NOT NULL) AS col_servidumbretipo_terreno_servidumbre
+		ORDER BY t_id) FILTER(WHERE t_id IS NOT NULL) AS col_servidumbretipo_terreno_servidumbre
 	FROM fdm.col_servidumbretipo_terreno_servidumbre
     WHERE terreno_servidumbre IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY terreno_servidumbre
@@ -270,7 +270,7 @@ info_puntolevantamiento AS (
 																					 ' ', st_y(puntoslevantamiento_seleccionados.localizacion_original),
 																					 CASE WHEN st_z(puntoslevantamiento_seleccionados.localizacion_original) IS NOT NULL THEN concat(' ', st_z(puntoslevantamiento_seleccionados.localizacion_original)) END)
 																		  ))
-			) FILTER(WHERE puntoslevantamiento_seleccionados.t_id_puntolevantamiento IS NOT NULL) AS puntolevantamiento
+			ORDER BY puntoslevantamiento_seleccionados.t_id_puntolevantamiento) FILTER(WHERE puntoslevantamiento_seleccionados.t_id_puntolevantamiento IS NOT NULL) AS puntolevantamiento
 	FROM
 	(
 		SELECT puntolevantamiento.t_id AS t_id_puntolevantamiento, puntolevantamiento.localizacion_original, construccion.t_id AS t_id_construccion  FROM fdm.construccion, fdm.puntolevantamiento
@@ -316,6 +316,7 @@ info_puntolevantamiento AS (
 	LEFT JOIN col_servidumbretipo_terreno_servidumbre ON terreno.t_id = col_servidumbretipo_terreno_servidumbre.terreno_servidumbre
     LEFT JOIN info_puntolevantamiento ON terreno.t_id = info_puntolevantamiento.ue_terreno
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
+  ORDER BY terreno.t_id
  )
 SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
 

@@ -25,6 +25,7 @@ legal_query_test_results = {
                                                 "id": 68,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Contrato",
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Desconocido",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -76,6 +77,7 @@ legal_query_test_results = {
                                                 "id": 68,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Contrato",
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Desconocido",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -129,6 +131,7 @@ legal_query_test_results = {
                                                 "id": 8,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Contrato",
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Desconocido",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18m064uu"
                                                 }
@@ -211,6 +214,7 @@ legal_query_test_results = {
                                                 "id": 16,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Contrato",
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Desconocido",
                                                     "Archivo fuente": "E:\\fuentes\\page_1_thumb_large.jpg"
                                                 }
@@ -241,6 +245,7 @@ legal_query_test_results = {
                                                 "id": 52,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Contrato",
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Desconocido",
                                                     "Archivo fuente": "E:\\fuentes\\page_1_thumb_large.jpg"
                                                 }

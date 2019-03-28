@@ -85,6 +85,7 @@ WITH
 		AS calificacion_convencional
 	FROM fdm.calificacion_convencional LEFT JOIN fdm.avaluounidadconstruccion ON calificacion_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
 	WHERE avaluounidadconstruccion.ucons IN (SELECT * FROM unidadesconstruccion_seleccionadas)
+	ORDER BY calificacion_convencional.t_id
  ),
  info_calificacion_no_convencional AS (
 	SELECT avaluounidadconstruccion.aucons,
@@ -95,6 +96,7 @@ WITH
 		AS calificacion_no_convencional
 	FROM fdm.calificacion_no_convencional LEFT JOIN fdm.avaluounidadconstruccion ON calificacion_no_convencional.unidadconstruccion = avaluounidadconstruccion.aucons
 	WHERE avaluounidadconstruccion.ucons IN (SELECT * FROM unidadesconstruccion_seleccionadas)
+	ORDER BY avaluounidadconstruccion.aucons
  ),
  info_uc AS (
 	 SELECT unidadconstruccion.construccion,
@@ -130,7 +132,7 @@ WITH
 															  					ELSE
 															  						COALESCE(info_calificacion_no_convencional.calificacion_no_convencional, '[]')
 															  					END
-															 ))) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
+															 )) ORDER BY unidadconstruccion.t_id) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
 	 FROM fdm.unidadconstruccion LEFT JOIN fdm.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
 	 LEFT JOIN fdm.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
 	 LEFT JOIN info_calificacion_convencional ON unidad_construccion.t_id = info_calificacion_convencional.aucons
@@ -143,7 +145,7 @@ WITH
 			json_agg(json_build_object('id', construccion.t_id,
 							  'attributes', json_build_object('Área construcción', construccion.area_construccion,
 															  'unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
-															 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
+															 )) ORDER BY construccion.t_id) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
 	 FROM fdm.construccion LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
      LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
 	 WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
@@ -164,7 +166,7 @@ WITH
 															  'Tipo', predio.tipo,
 															  'Destinación económica', predio_ficha.destinacion_economica,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
-															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
+															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
@@ -181,7 +183,7 @@ WITH
 									   'attributes', json_build_object('Porcentaje', ROUND((st_area(st_intersection(terreno.poligono_creado, zona_homogenea_geoeconomica.geometria))/ st_area(terreno.poligono_creado))::numeric * 100,2),
 									                                   'Valor', zona_homogenea_geoeconomica.valor,
 																	   'Identificador', zona_homogenea_geoeconomica.identificador))
-		) FILTER(WHERE zona_homogenea_geoeconomica.t_id IS NOT NULL) AS zona_homogenea_geoeconomica
+		ORDER BY zona_homogenea_geoeconomica.t_id) FILTER(WHERE zona_homogenea_geoeconomica.t_id IS NOT NULL) AS zona_homogenea_geoeconomica
 	FROM fdm.terreno, fdm.zona_homogenea_geoeconomica
     WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
 		  st_intersects(terreno.poligono_creado, zona_homogenea_geoeconomica.geometria) = True AND
@@ -194,7 +196,7 @@ WITH
 				json_build_object('id', zona_homogenea_fisica.t_id,
 									   'attributes', json_build_object('Porcentaje', ROUND((st_area(st_intersection(terreno.poligono_creado, zona_homogenea_fisica.geometria))/ st_area(terreno.poligono_creado))::numeric * 100, 2),
 																	   'Identificador', zona_homogenea_fisica.identificador))
-		) FILTER(WHERE zona_homogenea_fisica.t_id IS NOT NULL) AS zona_homogenea_fisica
+		ORDER BY zona_homogenea_fisica.t_id) FILTER(WHERE zona_homogenea_fisica.t_id IS NOT NULL) AS zona_homogenea_fisica
 	FROM fdm.terreno, fdm.zona_homogenea_fisica
     WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
 		  st_intersects(terreno.poligono_creado, zona_homogenea_fisica.geometria) = True AND
@@ -214,5 +216,6 @@ WITH
     LEFT JOIN info_zona_homogenea_geoeconomica ON info_zona_homogenea_geoeconomica.t_id = terreno.t_id
     LEFT JOIN info_zona_homogenea_fisica ON info_zona_homogenea_fisica.t_id = terreno.t_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
+	ORDER BY terreno.t_id
  )
 SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno

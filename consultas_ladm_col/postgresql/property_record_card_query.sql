@@ -33,7 +33,7 @@ WITH
 																	   'Nombre oferente', investigacionmercado.nombre_oferente,
 																	   'Teléfono contacto oferente', investigacionmercado.telefono_contacto_oferente,
 																	   'Observaciones', investigacionmercado.observaciones))
-		) FILTER(WHERE investigacionmercado.t_id IS NOT NULL) AS investigacionmercado
+		ORDER BY investigacionmercado.t_id) FILTER(WHERE investigacionmercado.t_id IS NOT NULL) AS investigacionmercado
 	FROM fdm.investigacionmercado WHERE investigacionmercado.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
 	GROUP BY investigacionmercado.fichapredio
  ),
@@ -59,7 +59,7 @@ WITH
 																	   'Etnia', nucleofamiliar.etnia,
 																	   'Dirección', nucleofamiliar.direccion,
 																	   'Celular', nucleofamiliar.celular))
-		) FILTER(WHERE nucleofamiliar.t_id IS NOT NULL) AS nucleofamiliar
+		ORDER BY nucleofamiliar.t_id) FILTER(WHERE nucleofamiliar.t_id IS NOT NULL) AS nucleofamiliar
 	FROM fdm.nucleofamiliar WHERE nucleofamiliar.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
 	GROUP BY nucleofamiliar.fichapredio
  ),
@@ -117,7 +117,7 @@ WITH
 															  , 'Tipo de documento encuestador', predio_ficha.tipo_documento_encuestador
 															  , 'nucleofamiliar', COALESCE(fpredio_nucleo_familiar.nucleofamiliar, '[]')
 															  , 'investigacionmercado', COALESCE(fpredio_investigacion_mercado.investigacionmercado, '[]')
-															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
+															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
 	 LEFT JOIN fpredio_nucleo_familiar ON fpredio_nucleo_familiar.fichapredio = predio_ficha.t_id
@@ -136,5 +136,6 @@ WITH
 													   )) as terreno
     FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
+	ORDER BY terreno.t_id
  )
 SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno

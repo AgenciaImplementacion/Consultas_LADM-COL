@@ -49,17 +49,6 @@ basic_query_test_results = {
                                         "Área construcción": 0.9,
                                         "extdireccion": [
                                             {
-                                                "id": 2078,
-                                                "attributes": {
-                                                    "País": "311_2_pais",
-                                                    "Departamento": "311_2_departamento",
-                                                    "Ciudad": "311_2_ciudad",
-                                                    "Código postal": None,
-                                                    "Apartado correo": "311_2_apartado_correo",
-                                                    "Nombre calle": "311_2_nombre_calle"
-                                                }
-                                            },
-                                            {
                                                 "id": 2077,
                                                 "attributes": {
                                                     "País": "311_pais",
@@ -68,6 +57,17 @@ basic_query_test_results = {
                                                     "Código postal": None,
                                                     "Apartado correo": "311_apartado_correo",
                                                     "Nombre calle": "311_nombre_calle"
+                                                }
+                                            },
+                                            {
+                                                "id": 2078,
+                                                "attributes": {
+                                                    "País": "311_2_pais",
+                                                    "Departamento": "311_2_departamento",
+                                                    "Ciudad": "311_2_ciudad",
+                                                    "Código postal": None,
+                                                    "Apartado correo": "311_2_apartado_correo",
+                                                    "Nombre calle": "311_2_nombre_calle"
                                                 }
                                             }
                                         ],
@@ -84,17 +84,6 @@ basic_query_test_results = {
                                                     "Puntuación": 17,
                                                     "extdireccion": [
                                                         {
-                                                            "id": 2084,
-                                                            "attributes": {
-                                                                "País": "873_2_pais",
-                                                                "Departamento": "873_2_departamento",
-                                                                "Ciudad": "873_2_ciudad",
-                                                                "Código postal": None,
-                                                                "Apartado correo": "873_2_apartado_correo",
-                                                                "Nombre calle": "873_2_nombre_calle"
-                                                            }
-                                                        },
-                                                        {
                                                             "id": 2083,
                                                             "attributes": {
                                                                 "País": "873_pais",
@@ -103,6 +92,17 @@ basic_query_test_results = {
                                                                 "Código postal": None,
                                                                 "Apartado correo": "873_apartado_correo",
                                                                 "Nombre calle": "873_nombre_calle"
+                                                            }
+                                                        },
+                                                        {
+                                                            "id": 2084,
+                                                            "attributes": {
+                                                                "País": "873_2_pais",
+                                                                "Departamento": "873_2_departamento",
+                                                                "Ciudad": "873_2_ciudad",
+                                                                "Código postal": None,
+                                                                "Apartado correo": "873_2_apartado_correo",
+                                                                "Nombre calle": "873_2_nombre_calle"
                                                             }
                                                         }
                                                     ]
@@ -164,4 +164,5 @@ basic_query_test_results = {
                 ]
             }
         }
-    ]}
+    ]
+}

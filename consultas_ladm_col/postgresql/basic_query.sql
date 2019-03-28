@@ -39,7 +39,7 @@ WITH
 																	   'Código postal', extdireccion.codigo_postal,
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
-		) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
+		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
 	FROM fdm.extdireccion WHERE unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	GROUP BY extdireccion.unidadconstruccion_ext_direccion_id
  ),
@@ -54,7 +54,7 @@ WITH
 															  'Uso', unidad_construccion.uso,
 															  'Puntuación', unidad_construccion.puntuacion,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
-															 ))) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
+															 )) ORDER BY unidadconstruccion.t_id) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
 	 FROM fdm.unidadconstruccion LEFT JOIN uc_extdireccion ON unidadconstruccion.t_id = uc_extdireccion.unidadconstruccion_ext_direccion_id
 	 LEFT JOIN fdm.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
 	 LEFT JOIN fdm.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
@@ -71,7 +71,7 @@ WITH
 																	   'Código postal', extdireccion.codigo_postal,
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
-		) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
+		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
 	FROM fdm.extdireccion WHERE construccion_ext_direccion_id IN (SELECT * FROM construcciones_seleccionadas)
 	GROUP BY extdireccion.construccion_ext_direccion_id
  ),
@@ -81,7 +81,7 @@ WITH
 							  'attributes', json_build_object('Área construcción', construccion.area_construccion,
 															  'extdireccion', COALESCE(c_extdireccion.extdireccion, '[]'),
 															  'unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
-															 ))) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
+															 )) ORDER BY construccion.t_id) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
 	 FROM fdm.construccion LEFT JOIN c_extdireccion ON construccion.t_id = c_extdireccion.construccion_ext_direccion_id
 	 LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
      LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
@@ -102,7 +102,7 @@ WITH
 															  'Tipo', predio.tipo,
 																'Destinación económica', predio_ficha.destinacion_economica,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
-															 ))) FILTER(WHERE predio.t_id IS NOT NULL) as predio
+															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
 	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
 	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
@@ -122,7 +122,7 @@ WITH
 																	   'Código postal', extdireccion.codigo_postal,
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
-		) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
+		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
 	FROM fdm.extdireccion WHERE terreno_ext_direccion_id IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY extdireccion.terreno_ext_direccion_id
  ),
@@ -136,6 +136,7 @@ WITH
     FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
 	LEFT JOIN t_extdireccion ON terreno.t_id = t_extdireccion.terreno_ext_direccion_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
+	ORDER BY terreno.t_id
  )
 SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
 

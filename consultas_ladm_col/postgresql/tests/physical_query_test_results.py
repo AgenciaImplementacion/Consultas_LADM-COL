@@ -156,15 +156,15 @@ physical_query_test_results = {
                 "Linderos externos": {
                     "lindero": [
                         {
-                            "id": 299,
-                            "attributes": {
-                                "Longitud [m]": 194.7
-                            }
-                        },
-                        {
                             "id": 157,
                             "attributes": {
                                 "Longitud [m]": 90.2
+                            }
+                        },
+                        {
+                            "id": 299,
+                            "attributes": {
+                                "Longitud [m]": 194.7
                             }
                         }
                     ],
