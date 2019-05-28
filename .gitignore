@@ -1,2 +1,18 @@
-consultas_ladm_col/.idea/
-consultas_ladm_col/venv/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# pycharm
+.idea
+
+# vscode
+.vscode
