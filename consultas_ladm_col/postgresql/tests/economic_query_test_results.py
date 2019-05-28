@@ -4,12 +4,12 @@ economic_query_test_results = {
             "id": 764,
             "attributes": {
                 "Área de terreno [m2]": 4934.3,
-                "Avalúo terreno [COP]": 1,
+                "Avalúo terreno [COP]": 1.0,
                 "zona_homogenea_geoeconomica": [
                     {
                         "id": 100162,
                         "attributes": {
-                            "Porcentaje": 16.8,
+                            "Porcentaje": 16.80,
                             "Valor": 3,
                             "Identificador": "3"
                         }

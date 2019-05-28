@@ -1,67 +1,67 @@
 WITH
  unidad_area_calculada_terreno AS (
-	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
  ),
  terrenos_seleccionados AS (
-	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
+	SELECT 764 AS ue_terreno WHERE '764' <> 'NULL'
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
-	SELECT uebaunit.baunit_predio as t_id FROM fdm.uebaunit WHERE uebaunit.ue_terreno = 13117 AND '13117' <> 'NULL'
+	SELECT uebaunit.baunit_predio as t_id FROM test_ladm_col_queries.uebaunit WHERE uebaunit.ue_terreno = 764 AND '764' <> 'NULL'
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  derechos_seleccionados AS (
-	 SELECT DISTINCT col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_derecho.t_id FROM test_ladm_col_queries.col_derecho WHERE col_derecho.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  derecho_interesados AS (
-	 SELECT DISTINCT col_derecho.interesado_col_interesado, col_derecho.t_id FROM fdm.col_derecho WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_derecho.interesado_col_interesado, col_derecho.t_id FROM test_ladm_col_queries.col_derecho WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_col_interesado IS NOT NULL
  ),
  derecho_agrupacion_interesados AS (
 	 SELECT DISTINCT col_derecho.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
-	 FROM fdm.col_derecho LEFT JOIN fdm.miembros ON col_derecho.interesado_la_agrupacion_interesados = miembros.agrupacion
+	 FROM test_ladm_col_queries.col_derecho LEFT JOIN test_ladm_col_queries.miembros ON col_derecho.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados) AND col_derecho.interesado_la_agrupacion_interesados IS NOT NULL
  ),
   restricciones_seleccionadas AS (
-	 SELECT DISTINCT col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_restriccion.t_id FROM test_ladm_col_queries.col_restriccion WHERE col_restriccion.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  restriccion_interesados AS (
-	 SELECT DISTINCT col_restriccion.interesado_col_interesado, col_restriccion.t_id FROM fdm.col_restriccion WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_restriccion.interesado_col_interesado, col_restriccion.t_id FROM test_ladm_col_queries.col_restriccion WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_col_interesado IS NOT NULL
  ),
  restriccion_agrupacion_interesados AS (
 	 SELECT DISTINCT col_restriccion.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
-	 FROM fdm.col_restriccion LEFT JOIN fdm.miembros ON col_restriccion.interesado_la_agrupacion_interesados = miembros.agrupacion
+	 FROM test_ladm_col_queries.col_restriccion LEFT JOIN test_ladm_col_queries.miembros ON col_restriccion.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas) AND col_restriccion.interesado_la_agrupacion_interesados IS NOT NULL
  ),
  responsabilidades_seleccionadas AS (
-	 SELECT DISTINCT col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_responsabilidad.t_id FROM test_ladm_col_queries.col_responsabilidad WHERE col_responsabilidad.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  responsabilidades_interesados AS (
-	 SELECT DISTINCT col_responsabilidad.interesado_col_interesado, col_responsabilidad.t_id FROM fdm.col_responsabilidad WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_responsabilidad.interesado_col_interesado, col_responsabilidad.t_id FROM test_ladm_col_queries.col_responsabilidad WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_col_interesado IS NOT NULL
  ),
  responsabilidades_agrupacion_interesados AS (
 	 SELECT DISTINCT col_responsabilidad.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
-	 FROM fdm.col_responsabilidad LEFT JOIN fdm.miembros ON col_responsabilidad.interesado_la_agrupacion_interesados = miembros.agrupacion
+	 FROM test_ladm_col_queries.col_responsabilidad LEFT JOIN test_ladm_col_queries.miembros ON col_responsabilidad.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas) AND col_responsabilidad.interesado_la_agrupacion_interesados IS NOT NULL
  ),
  hipotecas_seleccionadas AS (
-	 SELECT DISTINCT col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.unidad_predio IN (SELECT * FROM predios_seleccionados)
+	 SELECT DISTINCT col_hipoteca.t_id FROM test_ladm_col_queries.col_hipoteca WHERE col_hipoteca.unidad_predio IN (SELECT * FROM predios_seleccionados)
  ),
  hipotecas_interesados AS (
-	 SELECT DISTINCT col_hipoteca.interesado_col_interesado, col_hipoteca.t_id FROM fdm.col_hipoteca WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_col_interesado IS NOT NULL
+	 SELECT DISTINCT col_hipoteca.interesado_col_interesado, col_hipoteca.t_id FROM test_ladm_col_queries.col_hipoteca WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_col_interesado IS NOT NULL
  ),
  hipotecas_agrupacion_interesados AS (
 	 SELECT DISTINCT col_hipoteca.interesado_la_agrupacion_interesados, miembros.interesados_col_interesado
-	 FROM fdm.col_hipoteca LEFT JOIN fdm.miembros ON col_hipoteca.interesado_la_agrupacion_interesados = miembros.agrupacion
+	 FROM test_ladm_col_queries.col_hipoteca LEFT JOIN test_ladm_col_queries.miembros ON col_hipoteca.interesado_la_agrupacion_interesados = miembros.agrupacion
 	 WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas) AND col_hipoteca.interesado_la_agrupacion_interesados IS NOT NULL
  ),
 ------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ WITH
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto
+		FROM test_ladm_col_queries.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT derecho_interesados.interesado_col_interesado FROM derecho_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -91,8 +91,8 @@ WITH
 														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM derecho_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = derecho_interesados.interesado_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM derecho_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = derecho_interesados.interesado_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesados_derecho ON info_contacto_interesados_derecho.interesado = col_interesado.t_id
 	 GROUP BY derecho_interesados.t_id
  ),
@@ -106,7 +106,7 @@ WITH
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN derecho_interesados ON derecho_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM test_ladm_col_queries.interesado_contacto LEFT JOIN derecho_interesados ON derecho_interesados.interesado_col_interesado = interesado_contacto.interesado
 		WHERE interesado_contacto.interesado IN (SELECT DISTINCT derecho_agrupacion_interesados.interesados_col_interesado FROM derecho_agrupacion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -120,11 +120,11 @@ WITH
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM derecho_agrupacion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = derecho_agrupacion_interesados.interesados_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM derecho_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = derecho_agrupacion_interesados.interesados_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesado_agrupacion_interesados_derecho ON info_contacto_interesado_agrupacion_interesados_derecho.interesado = col_interesado.t_id
-	 LEFT JOIN fdm.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (derecho_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
-	 LEFT JOIN fdm.fraccion ON miembros.t_id = fraccion.miembros_participacion
+	 LEFT JOIN test_ladm_col_queries.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (derecho_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
+	 LEFT JOIN test_ladm_col_queries.fraccion ON miembros.t_id = fraccion.miembros_participacion
 	 GROUP BY derecho_agrupacion_interesados.interesado_la_agrupacion_interesados
  ),
  info_agrupacion_interesados AS (
@@ -135,7 +135,7 @@ WITH
 														  'Nombre', la_agrupacion_interesados.nombre,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_derecho.col_interesado, '[]')))
 	 ORDER BY la_agrupacion_interesados.t_id) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
-	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_derecho ON la_agrupacion_interesados.t_id = col_derecho.interesado_la_agrupacion_interesados
+	 FROM test_ladm_col_queries.la_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_derecho ON la_agrupacion_interesados.t_id = col_derecho.interesado_la_agrupacion_interesados
 	 LEFT JOIN info_interesados_agrupacion_interesados_derecho ON info_interesados_agrupacion_interesados_derecho.interesado_la_agrupacion_interesados = la_agrupacion_interesados.t_id
 	 WHERE la_agrupacion_interesados.t_id IN (SELECT DISTINCT derecho_agrupacion_interesados.interesado_la_agrupacion_interesados FROM derecho_agrupacion_interesados)
 	 AND col_derecho.t_id IN (SELECT derechos_seleccionados.t_id FROM derechos_seleccionados)
@@ -150,10 +150,10 @@ WITH
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY col_fuenteadministrativa.t_id) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
-	FROM fdm.col_derecho
-	LEFT JOIN fdm.rrrfuente ON col_derecho.t_id = rrrfuente.rrr_col_derecho
-	LEFT JOIN fdm.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
-	LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
+	FROM test_ladm_col_queries.col_derecho
+	LEFT JOIN test_ladm_col_queries.rrrfuente ON col_derecho.t_id = rrrfuente.rrr_col_derecho
+	LEFT JOIN test_ladm_col_queries.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
+	LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
 	WHERE col_derecho.t_id IN (SELECT derechos_seleccionados.t_id FROM derechos_seleccionados)
     GROUP BY col_derecho.t_id
  ),
@@ -167,7 +167,7 @@ info_derecho AS (
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_derecho.col_fuenteadministrativa, '[]'),
 														  CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_derecho.col_interesado, '[]') END))
 	 ORDER BY col_derecho.t_id) FILTER (WHERE col_derecho.t_id IS NOT NULL) AS col_derecho
-  FROM fdm.col_derecho LEFT JOIN info_fuentes_administrativas_derecho ON col_derecho.t_id = info_fuentes_administrativas_derecho.t_id
+  FROM test_ladm_col_queries.col_derecho LEFT JOIN info_fuentes_administrativas_derecho ON col_derecho.t_id = info_fuentes_administrativas_derecho.t_id
   LEFT JOIN info_interesados_derecho ON col_derecho.t_id = info_interesados_derecho.t_id
   LEFT JOIN info_agrupacion_interesados ON col_derecho.t_id = info_agrupacion_interesados.t_id
   WHERE col_derecho.t_id IN (SELECT * FROM derechos_seleccionados)
@@ -186,7 +186,7 @@ info_derecho AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto
+		FROM test_ladm_col_queries.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT restriccion_interesados.interesado_col_interesado FROM restriccion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -200,8 +200,8 @@ info_derecho AS (
 														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM restriccion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = restriccion_interesados.interesado_col_interesado
-	 LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM restriccion_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = restriccion_interesados.interesado_col_interesado
+	 LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesados_restriccion ON info_contacto_interesados_restriccion.interesado = col_interesado.t_id
 	 GROUP BY restriccion_interesados.t_id
  ),
@@ -215,7 +215,7 @@ info_derecho AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN restriccion_interesados ON restriccion_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM test_ladm_col_queries.interesado_contacto LEFT JOIN restriccion_interesados ON restriccion_interesados.interesado_col_interesado = interesado_contacto.interesado
 		WHERE interesado_contacto.interesado IN (SELECT DISTINCT restriccion_agrupacion_interesados.interesados_col_interesado FROM restriccion_agrupacion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -229,11 +229,11 @@ info_derecho AS (
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM restriccion_agrupacion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = restriccion_agrupacion_interesados.interesados_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM restriccion_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = restriccion_agrupacion_interesados.interesados_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesado_agrupacion_interesados_restriccion ON info_contacto_interesado_agrupacion_interesados_restriccion.interesado = col_interesado.t_id
-	 LEFT JOIN fdm.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
-	 LEFT JOIN fdm.fraccion ON miembros.t_id = fraccion.miembros_participacion
+	 LEFT JOIN test_ladm_col_queries.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
+	 LEFT JOIN test_ladm_col_queries.fraccion ON miembros.t_id = fraccion.miembros_participacion
 	 GROUP BY restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados
  ),
  info_agrupacion_interesados_restriccion AS (
@@ -244,7 +244,7 @@ info_derecho AS (
 														  'Nombre', la_agrupacion_interesados.nombre,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_restriccion.col_interesado, '[]')))
 	 ORDER BY la_agrupacion_interesados.t_id) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
-	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_restriccion ON la_agrupacion_interesados.t_id = col_restriccion.interesado_la_agrupacion_interesados
+	 FROM test_ladm_col_queries.la_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_restriccion ON la_agrupacion_interesados.t_id = col_restriccion.interesado_la_agrupacion_interesados
 	 LEFT JOIN info_interesados_agrupacion_interesados_restriccion ON info_interesados_agrupacion_interesados_restriccion.interesado_la_agrupacion_interesados = la_agrupacion_interesados.t_id
 	 WHERE la_agrupacion_interesados.t_id IN (SELECT DISTINCT restriccion_agrupacion_interesados.interesado_la_agrupacion_interesados FROM restriccion_agrupacion_interesados)
 	 AND col_restriccion.t_id IN (SELECT restricciones_seleccionadas.t_id FROM restricciones_seleccionadas)
@@ -259,10 +259,10 @@ info_derecho AS (
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY col_fuenteadministrativa.t_id) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
-	FROM fdm.col_restriccion
-	LEFT JOIN fdm.rrrfuente ON col_restriccion.t_id = rrrfuente.rrr_col_restriccion
-	LEFT JOIN fdm.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
-	LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
+	FROM test_ladm_col_queries.col_restriccion
+	LEFT JOIN test_ladm_col_queries.rrrfuente ON col_restriccion.t_id = rrrfuente.rrr_col_restriccion
+	LEFT JOIN test_ladm_col_queries.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
+	LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
 	WHERE col_restriccion.t_id IN (SELECT restricciones_seleccionadas.t_id FROM restricciones_seleccionadas)
     GROUP BY col_restriccion.t_id
  ),
@@ -276,7 +276,7 @@ info_restriccion AS (
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_restriccion.col_fuenteadministrativa, '[]'),
 														  CASE WHEN info_agrupacion_interesados_restriccion.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_restriccion.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_restriccion.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_restriccion.col_interesado, '[]') END))
 	 ORDER BY col_restriccion.t_id) FILTER (WHERE col_restriccion.t_id IS NOT NULL) AS col_restriccion
-  FROM fdm.col_restriccion LEFT JOIN info_fuentes_administrativas_restriccion ON col_restriccion.t_id = info_fuentes_administrativas_restriccion.t_id
+  FROM test_ladm_col_queries.col_restriccion LEFT JOIN info_fuentes_administrativas_restriccion ON col_restriccion.t_id = info_fuentes_administrativas_restriccion.t_id
   LEFT JOIN info_interesados_restriccion ON col_restriccion.t_id = info_interesados_restriccion.t_id
   LEFT JOIN info_agrupacion_interesados_restriccion ON col_restriccion.t_id = info_agrupacion_interesados_restriccion.t_id
   WHERE col_restriccion.t_id IN (SELECT * FROM restricciones_seleccionadas)
@@ -295,7 +295,7 @@ info_restriccion AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto
+		FROM test_ladm_col_queries.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT responsabilidades_interesados.interesado_col_interesado FROM responsabilidades_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -309,8 +309,8 @@ info_restriccion AS (
 														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_responsabilidad.interesado_contacto, '[]')))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM responsabilidades_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = responsabilidades_interesados.interesado_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM responsabilidades_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = responsabilidades_interesados.interesado_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesados_responsabilidad ON info_contacto_interesados_responsabilidad.interesado = col_interesado.t_id
 	 GROUP BY responsabilidades_interesados.t_id
  ),
@@ -324,7 +324,7 @@ info_restriccion AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN responsabilidades_interesados ON responsabilidades_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM test_ladm_col_queries.interesado_contacto LEFT JOIN responsabilidades_interesados ON responsabilidades_interesados.interesado_col_interesado = interesado_contacto.interesado
 		WHERE interesado_contacto.interesado IN (SELECT DISTINCT responsabilidades_agrupacion_interesados.interesados_col_interesado FROM responsabilidades_agrupacion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -338,11 +338,11 @@ info_restriccion AS (
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_responsabilidad.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM responsabilidades_agrupacion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = responsabilidades_agrupacion_interesados.interesados_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM responsabilidades_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = responsabilidades_agrupacion_interesados.interesados_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesado_agrupacion_interesados_responsabilidad ON info_contacto_interesado_agrupacion_interesados_responsabilidad.interesado = col_interesado.t_id
-	 LEFT JOIN fdm.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
-	 LEFT JOIN fdm.fraccion ON miembros.t_id = fraccion.miembros_participacion
+	 LEFT JOIN test_ladm_col_queries.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
+	 LEFT JOIN test_ladm_col_queries.fraccion ON miembros.t_id = fraccion.miembros_participacion
 	 GROUP BY responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados
  ),
  info_agrupacion_interesados_responsabilidad AS (
@@ -353,7 +353,7 @@ info_restriccion AS (
 														  'Nombre', la_agrupacion_interesados.nombre,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_responsabilidad.col_interesado, '[]')))
 	 ORDER BY la_agrupacion_interesados.t_id) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
-	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_responsabilidad ON la_agrupacion_interesados.t_id = col_responsabilidad.interesado_la_agrupacion_interesados
+	 FROM test_ladm_col_queries.la_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_responsabilidad ON la_agrupacion_interesados.t_id = col_responsabilidad.interesado_la_agrupacion_interesados
 	 LEFT JOIN info_interesados_agrupacion_interesados_responsabilidad ON info_interesados_agrupacion_interesados_responsabilidad.interesado_la_agrupacion_interesados = la_agrupacion_interesados.t_id
 	 WHERE la_agrupacion_interesados.t_id IN (SELECT DISTINCT responsabilidades_agrupacion_interesados.interesado_la_agrupacion_interesados FROM responsabilidades_agrupacion_interesados)
 	 AND col_responsabilidad.t_id IN (SELECT responsabilidades_seleccionadas.t_id FROM responsabilidades_seleccionadas)
@@ -368,10 +368,10 @@ info_restriccion AS (
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY col_fuenteadministrativa.t_id) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
-	FROM fdm.col_responsabilidad
-	LEFT JOIN fdm.rrrfuente ON col_responsabilidad.t_id = rrrfuente.rrr_col_responsabilidad
-	LEFT JOIN fdm.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
-	LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
+	FROM test_ladm_col_queries.col_responsabilidad
+	LEFT JOIN test_ladm_col_queries.rrrfuente ON col_responsabilidad.t_id = rrrfuente.rrr_col_responsabilidad
+	LEFT JOIN test_ladm_col_queries.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
+	LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
 	WHERE col_responsabilidad.t_id IN (SELECT responsabilidades_seleccionadas.t_id FROM responsabilidades_seleccionadas)
     GROUP BY col_responsabilidad.t_id
  ),
@@ -385,7 +385,7 @@ info_responsabilidad AS (
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_responsabilidad.col_fuenteadministrativa, '[]'),
 														  CASE WHEN info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_responsabilidad.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_responsabilidad.col_interesado, '[]') END))
 	 ORDER BY col_responsabilidad.t_id) FILTER (WHERE col_responsabilidad.t_id IS NOT NULL) AS col_responsabilidad
-  FROM fdm.col_responsabilidad LEFT JOIN info_fuentes_administrativas_responsabilidad ON col_responsabilidad.t_id = info_fuentes_administrativas_responsabilidad.t_id
+  FROM test_ladm_col_queries.col_responsabilidad LEFT JOIN info_fuentes_administrativas_responsabilidad ON col_responsabilidad.t_id = info_fuentes_administrativas_responsabilidad.t_id
   LEFT JOIN info_interesados_responsabilidad ON col_responsabilidad.t_id = info_interesados_responsabilidad.t_id
   LEFT JOIN info_agrupacion_interesados_responsabilidad ON col_responsabilidad.t_id = info_agrupacion_interesados_responsabilidad.t_id
   WHERE col_responsabilidad.t_id IN (SELECT * FROM responsabilidades_seleccionadas)
@@ -404,7 +404,7 @@ info_responsabilidad AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto
+		FROM test_ladm_col_queries.interesado_contacto
 		WHERE interesado_contacto.interesado IN (SELECT hipotecas_interesados.interesado_col_interesado FROM hipotecas_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -418,8 +418,8 @@ info_responsabilidad AS (
 														  CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN 'Tipo interesado jurídico' ELSE 'Género' END, CASE WHEN col_interesado.tipo = 'Persona_No_Natural' THEN col_interesado.tipo_interesado_juridico ELSE col_interesado.genero END,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_hipoteca.interesado_contacto, '[]')))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM hipotecas_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = hipotecas_interesados.interesado_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM hipotecas_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = hipotecas_interesados.interesado_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesados_hipoteca ON info_contacto_interesados_hipoteca.interesado = col_interesado.t_id
 	 GROUP BY hipotecas_interesados.t_id
  ),
@@ -433,7 +433,7 @@ info_responsabilidad AS (
 																	   'Correo_Electrónico', interesado_contacto.correo_electronico,
 																	   'Origen_de_datos', interesado_contacto.origen_datos)) ORDER BY interesado_contacto.t_id)
 		FILTER(WHERE interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
-		FROM fdm.interesado_contacto LEFT JOIN hipotecas_interesados ON hipotecas_interesados.interesado_col_interesado = interesado_contacto.interesado
+		FROM test_ladm_col_queries.interesado_contacto LEFT JOIN hipotecas_interesados ON hipotecas_interesados.interesado_col_interesado = interesado_contacto.interesado
 		WHERE interesado_contacto.interesado IN (SELECT DISTINCT hipotecas_agrupacion_interesados.interesados_col_interesado FROM hipotecas_agrupacion_interesados)
 		GROUP BY interesado_contacto.interesado
  ),
@@ -447,11 +447,11 @@ info_responsabilidad AS (
 														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_hipoteca.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY col_interesado.t_id) FILTER (WHERE col_interesado.t_id IS NOT NULL) AS col_interesado
-	 FROM hipotecas_agrupacion_interesados LEFT JOIN fdm.col_interesado ON col_interesado.t_id = hipotecas_agrupacion_interesados.interesados_col_interesado
-   LEFT JOIN fdm.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
+	 FROM hipotecas_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_interesado ON col_interesado.t_id = hipotecas_agrupacion_interesados.interesados_col_interesado
+   LEFT JOIN test_ladm_col_queries.col_interesadodocumentotipo ON col_interesadodocumentotipo.ilicode = col_interesado.tipo_documento
 	 LEFT JOIN info_contacto_interesado_agrupacion_interesados_hipoteca ON info_contacto_interesado_agrupacion_interesados_hipoteca.interesado = col_interesado.t_id
-	 LEFT JOIN fdm.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
-	 LEFT JOIN fdm.fraccion ON miembros.t_id = fraccion.miembros_participacion
+	 LEFT JOIN test_ladm_col_queries.miembros ON (miembros.agrupacion::text || miembros.interesados_col_interesado::text) = (hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados::text|| col_interesado.t_id::text)
+	 LEFT JOIN test_ladm_col_queries.fraccion ON miembros.t_id = fraccion.miembros_participacion
 	 GROUP BY hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados
  ),
  info_agrupacion_interesados_hipoteca AS (
@@ -462,7 +462,7 @@ info_responsabilidad AS (
 														  'Nombre', la_agrupacion_interesados.nombre,
 														  'col_interesado', COALESCE(info_interesados_agrupacion_interesados_hipoteca.col_interesado, '[]')))
 	 ORDER BY la_agrupacion_interesados.t_id) FILTER (WHERE la_agrupacion_interesados.t_id IS NOT NULL) AS la_agrupacion_interesados
-	 FROM fdm.la_agrupacion_interesados LEFT JOIN fdm.col_hipoteca ON la_agrupacion_interesados.t_id = col_hipoteca.interesado_la_agrupacion_interesados
+	 FROM test_ladm_col_queries.la_agrupacion_interesados LEFT JOIN test_ladm_col_queries.col_hipoteca ON la_agrupacion_interesados.t_id = col_hipoteca.interesado_la_agrupacion_interesados
 	 LEFT JOIN info_interesados_agrupacion_interesados_hipoteca ON info_interesados_agrupacion_interesados_hipoteca.interesado_la_agrupacion_interesados = la_agrupacion_interesados.t_id
 	 WHERE la_agrupacion_interesados.t_id IN (SELECT DISTINCT hipotecas_agrupacion_interesados.interesado_la_agrupacion_interesados FROM hipotecas_agrupacion_interesados)
 	 AND col_hipoteca.t_id IN (SELECT hipotecas_seleccionadas.t_id FROM hipotecas_seleccionadas)
@@ -477,10 +477,10 @@ info_responsabilidad AS (
 														  'Estado disponibilidad', col_fuenteadministrativa.estado_disponibilidad,
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY col_fuenteadministrativa.t_id) FILTER (WHERE col_fuenteadministrativa.t_id IS NOT NULL) AS col_fuenteadministrativa
-	FROM fdm.col_hipoteca
-	LEFT JOIN fdm.rrrfuente ON col_hipoteca.t_id = rrrfuente.rrr_col_hipoteca
-	LEFT JOIN fdm.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
-	LEFT JOIN fdm.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
+	FROM test_ladm_col_queries.col_hipoteca
+	LEFT JOIN test_ladm_col_queries.rrrfuente ON col_hipoteca.t_id = rrrfuente.rrr_col_hipoteca
+	LEFT JOIN test_ladm_col_queries.col_fuenteadministrativa ON rrrfuente.rfuente = col_fuenteadministrativa.t_id
+	LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteadminstrtiva_ext_archivo_id = col_fuenteadministrativa.t_id
 	WHERE col_hipoteca.t_id IN (SELECT hipotecas_seleccionadas.t_id FROM hipotecas_seleccionadas)
     GROUP BY col_hipoteca.t_id
  ),
@@ -494,7 +494,7 @@ info_hipoteca AS (
 														  'col_fuenteadministrativa', COALESCE(info_fuentes_administrativas_hipoteca.col_fuenteadministrativa, '[]'),
 														  CASE WHEN info_agrupacion_interesados_hipoteca.la_agrupacion_interesados IS NOT NULL THEN 'la_agrupacion_interesados' ELSE 'col_interesado' END, CASE WHEN info_agrupacion_interesados_hipoteca.la_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_hipoteca.la_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_hipoteca.col_interesado, '[]') END))
 	 ORDER BY col_hipoteca.t_id) FILTER (WHERE col_hipoteca.t_id IS NOT NULL) AS col_hipoteca
-  FROM fdm.col_hipoteca LEFT JOIN info_fuentes_administrativas_hipoteca ON col_hipoteca.t_id = info_fuentes_administrativas_hipoteca.t_id
+  FROM test_ladm_col_queries.col_hipoteca LEFT JOIN info_fuentes_administrativas_hipoteca ON col_hipoteca.t_id = info_fuentes_administrativas_hipoteca.t_id
   LEFT JOIN info_interesados_hipoteca ON col_hipoteca.t_id = info_interesados_hipoteca.t_id
   LEFT JOIN info_agrupacion_interesados_hipoteca ON col_hipoteca.t_id = info_agrupacion_interesados_hipoteca.t_id
   WHERE col_hipoteca.t_id IN (SELECT * FROM hipotecas_seleccionadas)
@@ -513,7 +513,7 @@ info_hipoteca AS (
 															  'col_responsabilidad', COALESCE(info_responsabilidad.col_responsabilidad, '[]'),
 															  'col_hipoteca', COALESCE(info_hipoteca.col_hipoteca, '[]')
 															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON uebaunit.baunit_predio = predio.t_id
      LEFT JOIN info_derecho ON info_derecho.unidad_predio = predio.t_id
 	 LEFT JOIN info_restriccion ON info_restriccion.unidad_predio = predio.t_id
      LEFT JOIN info_responsabilidad ON info_responsabilidad.unidad_predio = predio.t_id
@@ -530,7 +530,7 @@ info_hipoteca AS (
 						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
-	 FROM fdm.terreno LEFT JOIN info_predio ON terreno.t_id = info_predio.ue_terreno
+	 FROM test_ladm_col_queries.terreno LEFT JOIN info_predio ON terreno.t_id = info_predio.ue_terreno
 	 WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	 ORDER BY terreno.t_id
  )

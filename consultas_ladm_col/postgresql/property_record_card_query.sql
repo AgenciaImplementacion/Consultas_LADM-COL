@@ -1,27 +1,27 @@
 WITH
  unidad_area_calculada_terreno AS (
-	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
  ),
  terrenos_seleccionados AS (
-	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
+	SELECT 764 AS ue_terreno WHERE '764' <> 'NULL'
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
-	SELECT uebaunit.baunit_predio as t_id FROM fdm.uebaunit WHERE uebaunit.ue_terreno = 13117 AND '13117' <> 'NULL'
+	SELECT uebaunit.baunit_predio as t_id FROM test_ladm_col_queries.uebaunit WHERE uebaunit.ue_terreno = 764 AND '764' <> 'NULL'
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  predio_ficha_seleccionados AS (
-	 SELECT predio_ficha.t_id FROM fdm.predio_ficha WHERE predio_ficha.crpredio IN (SELECT * FROM predios_seleccionados)
+	 SELECT predio_ficha.t_id FROM test_ladm_col_queries.predio_ficha WHERE predio_ficha.crpredio IN (SELECT * FROM predios_seleccionados)
  ),
  fpredio_investigacion_mercado AS (
 	SELECT investigacionmercado.fichapredio,
@@ -34,7 +34,7 @@ WITH
 																	   'Teléfono contacto oferente', investigacionmercado.telefono_contacto_oferente,
 																	   'Observaciones', investigacionmercado.observaciones))
 		ORDER BY investigacionmercado.t_id) FILTER(WHERE investigacionmercado.t_id IS NOT NULL) AS investigacionmercado
-	FROM fdm.investigacionmercado WHERE investigacionmercado.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
+	FROM test_ladm_col_queries.investigacionmercado WHERE investigacionmercado.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
 	GROUP BY investigacionmercado.fichapredio
  ),
  fpredio_nucleo_familiar AS (
@@ -60,7 +60,7 @@ WITH
 																	   'Dirección', nucleofamiliar.direccion,
 																	   'Celular', nucleofamiliar.celular))
 		ORDER BY nucleofamiliar.t_id) FILTER(WHERE nucleofamiliar.t_id IS NOT NULL) AS nucleofamiliar
-	FROM fdm.nucleofamiliar WHERE nucleofamiliar.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
+	FROM test_ladm_col_queries.nucleofamiliar WHERE nucleofamiliar.fichapredio IN (SELECT * FROM predio_ficha_seleccionados)
 	GROUP BY nucleofamiliar.fichapredio
  ),
  info_predio AS (
@@ -118,8 +118,8 @@ WITH
 															  , 'nucleofamiliar', COALESCE(fpredio_nucleo_familiar.nucleofamiliar, '[]')
 															  , 'investigacionmercado', COALESCE(fpredio_investigacion_mercado.investigacionmercado, '[]')
 															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
-	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
+	 FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 LEFT JOIN test_ladm_col_queries.predio_ficha ON predio_ficha.crpredio = predio.t_id
 	 LEFT JOIN fpredio_nucleo_familiar ON fpredio_nucleo_familiar.fichapredio = predio_ficha.t_id
      LEFT JOIN fpredio_investigacion_mercado ON fpredio_investigacion_mercado.fichapredio = predio_ficha.t_id
 	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados)
@@ -134,7 +134,7 @@ WITH
 						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_calculada_terreno)), terreno.area_calculada,
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
-    FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
+    FROM test_ladm_col_queries.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	ORDER BY terreno.t_id
  )

@@ -1,33 +1,33 @@
 WITH
  unidad_area_calculada_terreno AS (
-	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'terreno' AND columnname = 'area_calculada' LIMIT 1
  ),
  unidad_area_construida_uc AS (
-	 SELECT ' [' || setting || ']' FROM fdm.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
  ),
  terrenos_seleccionados AS (
-	SELECT 13117 AS ue_terreno WHERE '13117' <> 'NULL'
+	SELECT 764 AS ue_terreno WHERE '764' <> 'NULL'
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT uebaunit.ue_terreno FROM fdm.predio LEFT JOIN fdm.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT uebaunit.ue_terreno FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON predio.t_id = uebaunit.baunit_predio  WHERE uebaunit.ue_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
-	SELECT uebaunit.baunit_predio as t_id FROM fdm.uebaunit WHERE uebaunit.ue_terreno = 13117 AND '13117' <> 'NULL'
+	SELECT uebaunit.baunit_predio as t_id FROM test_ladm_col_queries.uebaunit WHERE uebaunit.ue_terreno = 764 AND '764' <> 'NULL'
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.fmi = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial = 'NULL' END
 		UNION
-	SELECT t_id FROM fdm.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE predio.numero_predial_anterior = 'NULL' END
  ),
  construcciones_seleccionadas AS (
-	 SELECT ue_construccion FROM fdm.uebaunit WHERE uebaunit.baunit_predio IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_construccion IS NOT NULL
+	 SELECT ue_construccion FROM test_ladm_col_queries.uebaunit WHERE uebaunit.baunit_predio IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_construccion IS NOT NULL
  ),
  unidadesconstruccion_seleccionadas AS (
-	 SELECT unidadconstruccion.t_id FROM fdm.unidadconstruccion WHERE unidadconstruccion.construccion IN (SELECT ue_construccion FROM construcciones_seleccionadas)
+	 SELECT unidadconstruccion.t_id FROM test_ladm_col_queries.unidadconstruccion WHERE unidadconstruccion.construccion IN (SELECT ue_construccion FROM construcciones_seleccionadas)
  ),
  uc_extdireccion AS (
 	SELECT extdireccion.unidadconstruccion_ext_direccion_id,
@@ -40,7 +40,7 @@ WITH
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM fdm.extdireccion WHERE unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
+	FROM test_ladm_col_queries.extdireccion WHERE unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	GROUP BY extdireccion.unidadconstruccion_ext_direccion_id
  ),
  info_uc AS (
@@ -55,9 +55,9 @@ WITH
 															  'Puntuación', unidad_construccion.puntuacion,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
 															 )) ORDER BY unidadconstruccion.t_id) FILTER(WHERE unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
-	 FROM fdm.unidadconstruccion LEFT JOIN uc_extdireccion ON unidadconstruccion.t_id = uc_extdireccion.unidadconstruccion_ext_direccion_id
-	 LEFT JOIN fdm.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
-	 LEFT JOIN fdm.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
+	 FROM test_ladm_col_queries.unidadconstruccion LEFT JOIN uc_extdireccion ON unidadconstruccion.t_id = uc_extdireccion.unidadconstruccion_ext_direccion_id
+	 LEFT JOIN test_ladm_col_queries.avaluounidadconstruccion ON unidadconstruccion.t_id = avaluounidadconstruccion.ucons
+	 LEFT JOIN test_ladm_col_queries.unidad_construccion ON avaluounidadconstruccion.aucons = unidad_construccion.t_id
 	 WHERE unidadconstruccion.t_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	 GROUP BY unidadconstruccion.construccion
  ),
@@ -72,7 +72,7 @@ WITH
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM fdm.extdireccion WHERE construccion_ext_direccion_id IN (SELECT * FROM construcciones_seleccionadas)
+	FROM test_ladm_col_queries.extdireccion WHERE construccion_ext_direccion_id IN (SELECT * FROM construcciones_seleccionadas)
 	GROUP BY extdireccion.construccion_ext_direccion_id
  ),
  info_construccion as (
@@ -82,9 +82,9 @@ WITH
 															  'extdireccion', COALESCE(c_extdireccion.extdireccion, '[]'),
 															  'unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
 															 )) ORDER BY construccion.t_id) FILTER(WHERE construccion.t_id IS NOT NULL) as construccion
-	 FROM fdm.construccion LEFT JOIN c_extdireccion ON construccion.t_id = c_extdireccion.construccion_ext_direccion_id
+	 FROM test_ladm_col_queries.construccion LEFT JOIN c_extdireccion ON construccion.t_id = c_extdireccion.construccion_ext_direccion_id
 	 LEFT JOIN info_uc ON construccion.t_id = info_uc.construccion
-     LEFT JOIN fdm.uebaunit ON uebaunit.ue_construccion = construccion.t_id
+     LEFT JOIN test_ladm_col_queries.uebaunit ON uebaunit.ue_construccion = construccion.t_id
 	 WHERE construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
 	 GROUP BY uebaunit.baunit_predio
  ),
@@ -103,9 +103,9 @@ WITH
 																'Destinación económica', predio_ficha.destinacion_economica,
 															  'construccion', COALESCE(info_construccion.construccion, '[]')
 															 )) ORDER BY predio.t_id) FILTER(WHERE predio.t_id IS NOT NULL) as predio
-	 FROM fdm.predio LEFT JOIN fdm.uebaunit ON uebaunit.baunit_predio = predio.t_id
+	 FROM test_ladm_col_queries.predio LEFT JOIN test_ladm_col_queries.uebaunit ON uebaunit.baunit_predio = predio.t_id
 	 LEFT JOIN info_construccion ON predio.t_id = info_construccion.baunit_predio
-	 LEFT JOIN fdm.predio_ficha ON predio_ficha.crpredio = predio.t_id
+	 LEFT JOIN test_ladm_col_queries.predio_ficha ON predio_ficha.crpredio = predio.t_id
 	 WHERE predio.t_id IN (SELECT * FROM predios_seleccionados)
 		AND uebaunit.ue_terreno IS NOT NULL
 		AND uebaunit.ue_construccion IS NULL
@@ -123,7 +123,7 @@ WITH
 																	   'Apartado correo', extdireccion.apartado_correo,
 																	   'Nombre calle', extdireccion.nombre_calle))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM fdm.extdireccion WHERE terreno_ext_direccion_id IN (SELECT * FROM terrenos_seleccionados)
+	FROM test_ladm_col_queries.extdireccion WHERE terreno_ext_direccion_id IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY extdireccion.terreno_ext_direccion_id
  ),
  info_terreno AS (
@@ -133,7 +133,7 @@ WITH
 														'extdireccion', COALESCE(t_extdireccion.extdireccion, '[]'),
 														'predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
-    FROM fdm.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
+    FROM test_ladm_col_queries.terreno LEFT JOIN info_predio ON info_predio.ue_terreno = terreno.t_id
 	LEFT JOIN t_extdireccion ON terreno.t_id = t_extdireccion.terreno_ext_direccion_id
 	WHERE terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	ORDER BY terreno.t_id
