@@ -8,12 +8,16 @@ WITH
  terrenos_seleccionados AS (
 	SELECT 764 AS ue_op_terreno WHERE '764' <> 'NULL'
 		UNION
+	SELECT uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.uebaunit ON op_predio.t_id = uebaunit.baunit  WHERE uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
+		UNION
 	SELECT uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.uebaunit ON op_predio.t_id = uebaunit.baunit  WHERE uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
 		UNION
 	SELECT uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.uebaunit ON op_predio.t_id = uebaunit.baunit  WHERE uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
 	SELECT uebaunit.baunit as t_id FROM operacion.uebaunit WHERE uebaunit.ue_op_terreno = 764 AND '764' <> 'NULL'
+		UNION
+	SELECT t_id FROM operacion.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
 		UNION
 	SELECT t_id FROM operacion.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
 		UNION
@@ -102,8 +106,7 @@ WITH
 															  'Departamento', op_predio.departamento,
 															  'Municipio', op_predio.municipio,
 															  'NUPRE', op_predio.nupre,
-															  'Código ORIP', op_predio.codigo_orip,
-															  'Matricula Inmobiliaria', op_predio.matricula_inmobiliaria,
+															  'FMI', (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria),
 															  'Número predial', op_predio.numero_predial,
 															  'Número predial anterior', op_predio.numero_predial_anterior,
 															  'Tipo', op_predio.tipo,
