@@ -59,7 +59,7 @@ punto_lindero_internos_seleccionados AS (
 																	   'Estado disponibilidad', op_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', op_fuenteespacial.tipo_principal,
 																	   'Fecha documento', op_fuenteespacial.fecha_documento_fuente,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY op_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS op_fuenteespacial
 	FROM operacion.uefuente LEFT JOIN operacion.op_fuenteespacial ON uefuente.pfuente = op_fuenteespacial.t_id
     LEFT JOIN operacion.extarchivo ON extarchivo.op_fuenteespacial_ext_archivo_id = op_fuenteespacial.t_id
@@ -90,7 +90,7 @@ info_uc AS (
 																	   'Estado disponibilidad', op_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', op_fuenteespacial.tipo_principal,
 																	   'Fecha documento', op_fuenteespacial.fecha_documento_fuente,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY op_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS op_fuenteespacial
 	FROM operacion.uefuente LEFT JOIN operacion.op_fuenteespacial ON uefuente.pfuente = op_fuenteespacial.t_id
 	LEFT JOIN operacion.extarchivo ON extarchivo.op_fuenteespacial_ext_archivo_id = op_fuenteespacial.t_id
@@ -137,7 +137,7 @@ info_uc AS (
 																	   'Estado disponibilidad', op_fuenteespacial.estado_disponibilidad,
 																	   'Tipo principal', op_fuenteespacial.tipo_principal,
 																	   'Fecha documento', op_fuenteespacial.fecha_documento_fuente,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY op_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS op_fuenteespacial
 	FROM operacion.uefuente LEFT JOIN operacion.op_fuenteespacial ON uefuente.pfuente = op_fuenteespacial.t_id
     LEFT JOIN operacion.extarchivo ON extarchivo.op_fuenteespacial_ext_archivo_id = op_fuenteespacial.t_id

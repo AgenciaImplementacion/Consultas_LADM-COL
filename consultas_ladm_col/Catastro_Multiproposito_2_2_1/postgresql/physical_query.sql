@@ -63,7 +63,7 @@ punto_lindero_internos_seleccionados AS (
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM test_ladm_col_queries.uefuente LEFT JOIN test_ladm_col_queries.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
     LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
@@ -98,7 +98,7 @@ info_uc AS (
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM test_ladm_col_queries.uefuente LEFT JOIN test_ladm_col_queries.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
 	LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
@@ -148,7 +148,7 @@ info_uc AS (
 																	   'Tipo principal', col_fuenteespacial.tipo_principal,
 																	   'Fecha de entrega', col_fuenteespacial.fecha_entrega,
 																	   'Fecha de grabación', col_fuenteespacial.fecha_grabacion,
-																	   'Enlace fuente espacial', extarchivo.datos))
+																	   'Archivo fuente', extarchivo.datos))
 		ORDER BY col_fuenteespacial.t_id) FILTER(WHERE ueFuente.pfuente IS NOT NULL) AS col_fuenteespacial
 	FROM test_ladm_col_queries.uefuente LEFT JOIN test_ladm_col_queries.col_fuenteespacial ON uefuente.pfuente = col_fuenteespacial.t_id
     LEFT JOIN test_ladm_col_queries.extarchivo ON extarchivo.col_fuenteespacial_ext_archivo_id = col_fuenteespacial.t_id
