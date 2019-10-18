@@ -170,8 +170,8 @@ info_derecho AS (
 						  'attributes', json_build_object('Tipo', op_interesado.tipo,
 														  op_interesadodocumentotipo.dispname, op_interesado.documento_identidad,
 														  'Nombre', op_interesado.nombre,
-														  CASE WHEN op_interesado.tipo = 9 THEN 'Tipo interesado jurídico' ELSE 'Género' END,
-														  CASE WHEN op_interesado.tipo = 9 THEN (SELECT dispname FROM operacion.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM operacion.op_sexotipo WHERE t_id = op_interesado.sexo) END,
+														  CASE WHEN op_interesado.tipo = (SELECT t_id FROM operacion.op_interesadotipo WHERE ilicode LIKE 'Persona_Juridica') THEN 'Tipo interesado jurídico' ELSE 'Género' END,
+														  CASE WHEN op_interesado.tipo = (SELECT t_id FROM operacion.op_interesadotipo WHERE ilicode LIKE 'Persona_Juridica') THEN (SELECT dispname FROM operacion.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM operacion.op_sexotipo WHERE t_id = op_interesado.sexo) END,
 														  'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
 	 ORDER BY op_interesado.t_id) FILTER (WHERE op_interesado.t_id IS NOT NULL) AS op_interesado
 	 FROM restriccion_interesados LEFT JOIN operacion.op_interesado ON op_interesado.t_id = restriccion_interesados.interesado_op_interesado
