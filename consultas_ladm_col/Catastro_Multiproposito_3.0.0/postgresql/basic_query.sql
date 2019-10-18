@@ -1,63 +1,63 @@
 WITH
  unidad_area_terreno AS (
-	 SELECT ' [' || setting || ']' FROM operacion.t_ili2db_column_prop WHERE tablename = 'op_terreno' AND columnname = 'area_terreno' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'op_terreno' AND columnname = 'area_terreno' LIMIT 1
  ),
  unidad_area_construida_uc AS (
-	 SELECT ' [' || setting || ']' FROM operacion.t_ili2db_column_prop WHERE tablename = 'op_unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
+	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'op_unidadconstruccion' AND columnname = 'area_construida' LIMIT 1
  ),
  terrenos_seleccionados AS (
 	SELECT 1458 AS ue_op_terreno WHERE '1458' <> 'NULL'
 		UNION
-	SELECT col_uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
+	SELECT col_uebaunit.ue_op_terreno FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
 		UNION
-	SELECT col_uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
+	SELECT col_uebaunit.ue_op_terreno FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
 		UNION
-	SELECT col_uebaunit.ue_op_terreno FROM operacion.op_predio LEFT JOIN operacion.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
+	SELECT col_uebaunit.ue_op_terreno FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
-	SELECT col_uebaunit.baunit as t_id FROM operacion.col_uebaunit WHERE col_uebaunit.ue_op_terreno = 1458 AND '1458' <> 'NULL'
+	SELECT col_uebaunit.baunit as t_id FROM test_ladm_col_queries.col_uebaunit WHERE col_uebaunit.ue_op_terreno = 1458 AND '1458' <> 'NULL'
 		UNION
-	SELECT t_id FROM operacion.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
 		UNION
-	SELECT t_id FROM operacion.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial = 'NULL' END
 		UNION
-	SELECT t_id FROM operacion.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
+	SELECT t_id FROM test_ladm_col_queries.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
  ),
   construcciones_seleccionadas AS (
-	 SELECT ue_op_construccion FROM operacion.col_uebaunit WHERE col_uebaunit.baunit IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_op_construccion IS NOT NULL
+	 SELECT ue_op_construccion FROM test_ladm_col_queries.col_uebaunit WHERE col_uebaunit.baunit IN (SELECT predios_seleccionados.t_id FROM predios_seleccionados WHERE predios_seleccionados.t_id IS NOT NULL) AND ue_op_construccion IS NOT NULL
  ),
  unidadesconstruccion_seleccionadas AS (
-	 SELECT op_unidadconstruccion.t_id FROM operacion.op_unidadconstruccion WHERE op_unidadconstruccion.op_construccion IN (SELECT ue_op_construccion FROM construcciones_seleccionadas)
+	 SELECT op_unidadconstruccion.t_id FROM test_ladm_col_queries.op_unidadconstruccion WHERE op_unidadconstruccion.op_construccion IN (SELECT ue_op_construccion FROM construcciones_seleccionadas)
  ),
  uc_extdireccion AS (
 	SELECT extdireccion.op_unidadconstruccion_ext_direccion_id,
 		json_agg(
 			json_build_object('id', extdireccion.t_id,
-									 'attributes', json_build_object('Tipo dirección', (select dispname from operacion.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
+									 'attributes', json_build_object('Tipo dirección', (select dispname from test_ladm_col_queries.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
 																	 'Código postal', extdireccion.codigo_postal,
-																	 'Dirección', concat(COALESCE((select dispname from operacion.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
+																	 'Dirección', concat(COALESCE((select dispname from test_ladm_col_queries.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_principal || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_principal || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.numero_predio || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
 																						 COALESCE(extdireccion.complemento || ' ', ''),
 																						 COALESCE(extdireccion.nombre_predio || ' ', '')
 																						)))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM operacion.extdireccion WHERE op_unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
+	FROM test_ladm_col_queries.extdireccion WHERE op_unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	GROUP BY extdireccion.op_unidadconstruccion_ext_direccion_id
  ),
  uc_componentes as (
 	 select av_unidad_construccion.op_unidad_construccion,
 	 json_agg(
 				json_build_object('id', av_componente_construccion.t_id,
-									   'attributes', json_build_object('Tipo componente', (SELECT dispname FROM operacion.av_componenteconstrucciontipo WHERE t_id = av_componente_construccion.tipo_componente),
+									   'attributes', json_build_object('Tipo componente', (SELECT dispname FROM test_ladm_col_queries.av_componenteconstrucciontipo WHERE t_id = av_componente_construccion.tipo_componente),
 																	   'Cantidad', av_componente_construccion.cantidad))
 		ORDER BY av_unidad_construccion.t_id) FILTER(WHERE av_unidad_construccion.t_id IS NOT NULL) AS componentes
-	 from operacion.av_unidad_construccion LEFT JOIN operacion.av_componente_construccion
+	 from test_ladm_col_queries.av_unidad_construccion LEFT JOIN test_ladm_col_queries.av_componente_construccion
 	 ON av_unidad_construccion.t_id = av_componente_construccion.av_unidad_construccion
 	 WHERE av_unidad_construccion.op_unidad_construccion IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	 GROUP BY av_unidad_construccion.op_unidad_construccion
@@ -68,12 +68,12 @@ WITH
 							  'attributes', json_build_object('Número de pisos', op_unidadconstruccion.numero_pisos,
 															  CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), op_unidadconstruccion.area_construida,
 															  'av_componente_construccion', COALESCE(uc_componentes.componentes, '[]'),
-															  'Uso', (SELECT dispname FROM operacion.op_usouconstipo WHERE t_id = op_unidadconstruccion.uso),
+															  'Uso', (SELECT dispname FROM test_ladm_col_queries.op_usouconstipo WHERE t_id = op_unidadconstruccion.uso),
 															  'Puntuación', av_unidad_construccion.puntuacion,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
 															 )) ORDER BY op_unidadconstruccion.t_id) FILTER(WHERE op_unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
-	 FROM operacion.op_unidadconstruccion
-	 LEFT JOIN operacion.av_unidad_construccion ON av_unidad_construccion.op_unidad_construccion = op_unidadconstruccion.t_id
+	 FROM test_ladm_col_queries.op_unidadconstruccion
+	 LEFT JOIN test_ladm_col_queries.av_unidad_construccion ON av_unidad_construccion.op_unidad_construccion = op_unidadconstruccion.t_id
 	 LEFT JOIN uc_componentes ON uc_componentes.op_unidad_construccion = op_unidadconstruccion.t_id
 	 LEFT JOIN uc_extdireccion ON op_unidadconstruccion.t_id = uc_extdireccion.op_unidadconstruccion_ext_direccion_id
 	 WHERE op_unidadconstruccion.t_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
@@ -83,21 +83,21 @@ WITH
 	SELECT extdireccion.op_construccion_ext_direccion_id,
 		json_agg(
 			json_build_object('id', extdireccion.t_id,
-									 'attributes', json_build_object('Tipo dirección', (select dispname from operacion.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
+									 'attributes', json_build_object('Tipo dirección', (select dispname from test_ladm_col_queries.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
 																	 'Código postal', extdireccion.codigo_postal,
-																	 'Dirección', concat(COALESCE((select dispname from operacion.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
+																	 'Dirección', concat(COALESCE((select dispname from test_ladm_col_queries.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_principal || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_principal || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.numero_predio || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
 																						 COALESCE(extdireccion.complemento || ' ', ''),
 																						 COALESCE(extdireccion.nombre_predio || ' ', '')
 																						)))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM operacion.extdireccion WHERE op_construccion_ext_direccion_id IN (SELECT * FROM construcciones_seleccionadas)
+	FROM test_ladm_col_queries.extdireccion WHERE op_construccion_ext_direccion_id IN (SELECT * FROM construcciones_seleccionadas)
 	GROUP BY extdireccion.op_construccion_ext_direccion_id
  ),
  info_construccion as (
@@ -107,9 +107,9 @@ WITH
 															  'extdireccion', COALESCE(c_extdireccion.extdireccion, '[]'),
 															  'op_unidadconstruccion', COALESCE(info_uc.unidadconstruccion, '[]')
 															 )) ORDER BY op_construccion.t_id) FILTER(WHERE op_construccion.t_id IS NOT NULL) as construccion
-	 FROM operacion.op_construccion LEFT JOIN c_extdireccion ON op_construccion.t_id = c_extdireccion.op_construccion_ext_direccion_id
+	 FROM test_ladm_col_queries.op_construccion LEFT JOIN c_extdireccion ON op_construccion.t_id = c_extdireccion.op_construccion_ext_direccion_id
 	 LEFT JOIN info_uc ON op_construccion.t_id = info_uc.op_construccion
-     LEFT JOIN operacion.col_uebaunit ON col_uebaunit.ue_op_construccion = op_construccion.t_id
+     LEFT JOIN test_ladm_col_queries.col_uebaunit ON col_uebaunit.ue_op_construccion = op_construccion.t_id
 	 WHERE op_construccion.t_id IN (SELECT * FROM construcciones_seleccionadas)
 	 GROUP BY col_uebaunit.baunit
  ),
@@ -123,13 +123,13 @@ WITH
 															  'FMI', (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria),
 															  'Número predial', op_predio.numero_predial,
 															  'Número predial anterior', op_predio.numero_predial_anterior,
-															  'Tipo', (SELECT dispname FROM operacion.op_prediotipo WHERE t_id = op_predio.tipo),
-															  'Destinación económica', (SELECT dispname FROM operacion.fcm_destinacioneconomicatipo WHERE t_id = fcm_formulario_unico_cm.destinacion_economica),
+															  'Tipo', (SELECT dispname FROM test_ladm_col_queries.op_prediotipo WHERE t_id = op_predio.tipo),
+															  'Destinación económica', (SELECT dispname FROM test_ladm_col_queries.fcm_destinacioneconomicatipo WHERE t_id = fcm_formulario_unico_cm.destinacion_economica),
 															  'op_construccion', COALESCE(info_construccion.construccion, '[]')
 															 )) ORDER BY op_predio.t_id) FILTER(WHERE op_predio.t_id IS NOT NULL) as predio
-	 FROM operacion.op_predio LEFT JOIN operacion.col_uebaunit ON col_uebaunit.baunit = op_predio.t_id
+	 FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON col_uebaunit.baunit = op_predio.t_id
 	 LEFT JOIN info_construccion ON op_predio.t_id = info_construccion.baunit
-	 LEFT JOIN operacion.fcm_formulario_unico_cm ON fcm_formulario_unico_cm.op_predio = op_predio.t_id
+	 LEFT JOIN test_ladm_col_queries.fcm_formulario_unico_cm ON fcm_formulario_unico_cm.op_predio = op_predio.t_id
 	 WHERE op_predio.t_id IN (SELECT * FROM predios_seleccionados)
 		AND col_uebaunit.ue_op_terreno IS NOT NULL
 		AND col_uebaunit.ue_op_construccion IS NULL
@@ -140,21 +140,21 @@ WITH
 	SELECT extdireccion.op_terreno_ext_direccion_id,
 		json_agg(
 			json_build_object('id', extdireccion.t_id,
-									 'attributes', json_build_object('Tipo dirección', (select dispname from operacion.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
+									 'attributes', json_build_object('Tipo dirección', (select dispname from test_ladm_col_queries.extdireccion_tipo_direccion where t_id = extdireccion.tipo_direccion),
 																	 'Código postal', extdireccion.codigo_postal,
-																	 'Dirección', concat(COALESCE((select dispname from operacion.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
+																	 'Dirección', concat(COALESCE((select dispname from test_ladm_col_queries.extdireccion_clase_via_principal where t_id = extdireccion.clase_via_principal) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_principal || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_principal || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_ciudad where t_id = extdireccion.sector_ciudad) || ' ', ''),
 																						 COALESCE(extdireccion.valor_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.letra_via_generadora || ' ', ''),
 																						 COALESCE(extdireccion.numero_predio || ' ', ''),
-																						 COALESCE((select dispname from operacion.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
+																						 COALESCE((select dispname from test_ladm_col_queries.extdireccion_sector_predio where t_id = extdireccion.sector_predio) || ' ', ''),
 																						 COALESCE(extdireccion.complemento || ' ', ''),
 																						 COALESCE(extdireccion.nombre_predio || ' ', '')
 																						)))
 		ORDER BY extdireccion.t_id) FILTER(WHERE extdireccion.t_id IS NOT NULL) AS extdireccion
-	FROM operacion.extdireccion WHERE op_terreno_ext_direccion_id IN (SELECT * FROM terrenos_seleccionados)
+	FROM test_ladm_col_queries.extdireccion WHERE op_terreno_ext_direccion_id IN (SELECT * FROM terrenos_seleccionados)
 	GROUP BY extdireccion.op_terreno_ext_direccion_id
  ),
  info_terreno AS (
@@ -164,7 +164,7 @@ WITH
 														'extdireccion', COALESCE(t_extdireccion.extdireccion, '[]'),
 														'op_predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
-    FROM operacion.op_terreno LEFT JOIN info_predio ON info_predio.ue_op_terreno = op_terreno.t_id
+    FROM test_ladm_col_queries.op_terreno LEFT JOIN info_predio ON info_predio.ue_op_terreno = op_terreno.t_id
 	LEFT JOIN t_extdireccion ON op_terreno.t_id = t_extdireccion.op_terreno_ext_direccion_id
 	WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	ORDER BY op_terreno.t_id
