@@ -1,30 +1,30 @@
 legal_query_test_results = {
     'query_by_plot_id': [
         {
-            "id": 1458,
+            "id": 1377,
             "attributes": {
                 "Área de terreno [m2]": 4934.3,
                 "predio": [
                     {
-                        "id": 1042,
+                        "id": 962,
                         "attributes": {
                             "Nombre": "El Pomarroso",
                             "NUPRE": "0033",
-                            "FMI": null,
+                            "FMI": None,
                             "Número predial": "253940000000000230073000000000",
                             "Número predial anterior": "25394000000230073000",
                             "op_derecho": [
                                 {
-                                    "id": 3574,
+                                    "id": 2913,
                                     "attributes": {
                                         "Tipo de derecho": "Dominio",
                                         "Descripción": "1918_descripcion",
                                         "op_fuenteadministrativa": [
                                             {
-                                                "id": 760,
+                                                "id": 680,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura Publica",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -32,7 +32,7 @@ legal_query_test_results = {
                                         ],
                                         "op_interesado": [
                                             {
-                                                "id": 814,
+                                                "id": 755,
                                                 "attributes": {
                                                     "Tipo": "Persona natural",
                                                     "Cedula Ciudadania": "4",
@@ -40,7 +40,7 @@ legal_query_test_results = {
                                                     "Género": "Masculino",
                                                     "interesado_contacto": [
                                                         {
-                                                            "id": 837,
+                                                            "id": 757,
                                                             "attributes": {
                                                                 "Teléfono 1": "111_telefono1",
                                                                 "Teléfono 2": "111_telefono2",
@@ -50,7 +50,7 @@ legal_query_test_results = {
                                                             }
                                                         },
                                                         {
-                                                            "id": 838,
+                                                            "id": 758,
                                                             "attributes": {
                                                                 "Teléfono 1": "111_2_telefono1",
                                                                 "Teléfono 2": "111_2_telefono2",
@@ -66,16 +66,16 @@ legal_query_test_results = {
                                     }
                                 },
                                 {
-                                    "id": 3575,
+                                    "id": 2914,
                                     "attributes": {
                                         "Tipo de derecho": "Dominio",
                                         "Descripción": "1895_descripcion",
                                         "op_fuenteadministrativa": [
                                             {
-                                                "id": 760,
+                                                "id": 680,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura Publica",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -83,7 +83,7 @@ legal_query_test_results = {
                                         ],
                                         "op_interesado": [
                                             {
-                                                "id": 814,
+                                                "id": 755,
                                                 "attributes": {
                                                     "Tipo": "Persona natural",
                                                     "Cedula Ciudadania": "4",
@@ -91,7 +91,7 @@ legal_query_test_results = {
                                                     "Género": "Masculino",
                                                     "interesado_contacto": [
                                                         {
-                                                            "id": 837,
+                                                            "id": 757,
                                                             "attributes": {
                                                                 "Teléfono 1": "111_telefono1",
                                                                 "Teléfono 2": "111_telefono2",
@@ -101,7 +101,7 @@ legal_query_test_results = {
                                                             }
                                                         },
                                                         {
-                                                            "id": 838,
+                                                            "id": 758,
                                                             "attributes": {
                                                                 "Teléfono 1": "111_2_telefono1",
                                                                 "Teléfono 2": "111_2_telefono2",
@@ -119,16 +119,16 @@ legal_query_test_results = {
                             ],
                             "op_restriccion": [
                                 {
-                                    "id": 1566,
+                                    "id": 1472,
                                     "attributes": {
                                         "Tipo de restricción": "Servidumbre",
                                         "Descripción": "descripcion",
                                         "op_fuenteadministrativa": [
                                             {
-                                                "id": 718,
+                                                "id": 638,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura Publica",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18m064uu"
                                                 }
@@ -136,20 +136,20 @@ legal_query_test_results = {
                                         ],
                                         "op_agrupacion_interesados": [
                                             {
-                                                "id": 676,
+                                                "id": 598,
                                                 "attributes": {
                                                     "Tipo de agrupación de interesados": "Grupo Civil",
                                                     "Nombre": "2",
                                                     "op_interesado": [
                                                         {
-                                                            "id": 822,
+                                                            "id": 741,
                                                             "attributes": {
                                                                 "Cedula Ciudadania": "1",
                                                                 "Nombre": "1 1primer apellido 1segundo apellido 1primer nombre 1segundo nombre",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [
                                                                     {
-                                                                        "id": 836,
+                                                                        "id": 756,
                                                                         "attributes": {
                                                                             "Teléfono 1": "1_2_telefono1",
                                                                             "Teléfono 2": "1_2_telefono2",
@@ -159,7 +159,7 @@ legal_query_test_results = {
                                                                         }
                                                                     },
                                                                     {
-                                                                        "id": 839,
+                                                                        "id": 759,
                                                                         "attributes": {
                                                                             "Teléfono 1": "1_telefono1",
                                                                             "Teléfono 2": "1_telefono2",
@@ -173,21 +173,21 @@ legal_query_test_results = {
                                                             }
                                                         },
                                                         {
-                                                            "id": 824,
+                                                            "id": 743,
                                                             "attributes": {
                                                                 "Cedula Ciudadania": "36",
                                                                 "Nombre": "36 36primer apellido 36segundo apellido 36primer nombre 36segundo nombre Agricultores S.A.S",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [],
                                                                 "fraccion": 33.33
                                                             }
                                                         },
                                                         {
-                                                            "id": 826,
+                                                            "id": 745,
                                                             "attributes": {
                                                                 "Cedula Ciudadania": "14",
                                                                 "Nombre": "14 14primer apellido 14segundo apellido 14primer nombre 14segundo nombre",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [],
                                                                 "fraccion": 33.33
                                                             }

@@ -1,4 +1,4 @@
-def get_igac_basic_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_parcel_number, valuation_model, cm_form_model):
+def get_igac_basic_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_parcel_number, valuation_model, cadastral_form_model):
 
     query = """
             WITH
@@ -155,7 +155,7 @@ def get_igac_basic_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                                                                           'Tipo', (SELECT dispname FROM {schema}.op_prediotipo WHERE t_id = op_predio.tipo),
 """
 
-    if cm_form_model:
+    if cadastral_form_model:
         query += """
                                                                           'Destinación económica', (SELECT dispname FROM {schema}.fcm_destinacioneconomicatipo WHERE t_id = fcm_formulario_unico_cm.destinacion_economica),
         """
@@ -171,7 +171,7 @@ def get_igac_basic_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_
                  LEFT JOIN info_construccion ON op_predio.t_id = info_construccion.baunit
             """
 
-    if cm_form_model:
+    if cadastral_form_model:
         query += """
                 LEFT JOIN {schema}.fcm_formulario_unico_cm ON fcm_formulario_unico_cm.op_predio = op_predio.t_id
             """

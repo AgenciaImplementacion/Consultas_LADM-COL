@@ -1,4 +1,4 @@
-def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_parcel_number, cm_form_model):
+def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_number, previous_parcel_number, cadastral_form_model):
 
     query = """
                 WITH
@@ -25,7 +25,7 @@ def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_nu
                  ),
     """
     
-    if cm_form_model:
+    if cadastral_form_model:
         query += """
                  predio_formulario_unico AS (
                      SELECT fcm_formulario_unico_cm.t_id FROM {schema}.fcm_formulario_unico_cm WHERE fcm_formulario_unico_cm.op_predio IN (SELECT * FROM predios_seleccionados)
@@ -60,7 +60,7 @@ def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_nu
                                                                               , 'Tipo', (SELECT dispname FROM {schema}.op_prediotipo WHERE t_id = op_predio.tipo)
     """
     
-    if cm_form_model:
+    if cadastral_form_model:
         query += """
                     															  , 'Corregimiento', fcm_formulario_unico_cm.corregimiento
                     															  , 'Localidad/Comuna', fcm_formulario_unico_cm.localidad_comuna
@@ -100,7 +100,7 @@ def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_nu
                      FROM {schema}.op_predio LEFT JOIN {schema}.col_uebaunit ON col_uebaunit.baunit = op_predio.t_id
     """
     
-    if cm_form_model:
+    if cadastral_form_model:
         query += """
                     	 LEFT JOIN {schema}.fcm_formulario_unico_cm ON op_predio.t_id = fcm_formulario_unico_cm.op_predio
                     	 LEFT JOIN fcm_contacto_visita ON fcm_contacto_visita.fcm_formulario = fcm_formulario_unico_cm.t_id
@@ -123,7 +123,7 @@ def get_igac_property_record_card_query(schema, plot_t_id, parcel_fmi, parcel_nu
                     WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
                     ORDER BY op_terreno.t_id
                  )
-                 SELECT json_agg(info_terreno.op_terreno) AS op_terreno FROM info_terreno
+                 SELECT json_agg(info_terreno.op_terreno) AS terreno FROM info_terreno
     """
 
     query = query.format(schema= schema, plot_t_id=plot_t_id, parcel_fmi=parcel_fmi, parcel_number=parcel_number, previous_parcel_number=previous_parcel_number)

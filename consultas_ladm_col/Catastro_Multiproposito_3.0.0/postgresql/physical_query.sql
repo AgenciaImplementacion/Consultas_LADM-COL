@@ -12,7 +12,7 @@ WITH
 	 SELECT ' [' || setting || ']' FROM test_ladm_col_queries.t_ili2db_column_prop WHERE tablename = 'op_lindero' AND columnname = 'longitud' LIMIT 1
  ),
  terrenos_seleccionados AS (
-	SELECT 1458 AS ue_op_terreno WHERE '1458' <> 'NULL'
+	SELECT 1377 AS ue_op_terreno WHERE '1377' <> 'NULL'
 		UNION
 	SELECT col_uebaunit.ue_op_terreno FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
 		UNION
@@ -21,7 +21,7 @@ WITH
 	SELECT col_uebaunit.ue_op_terreno FROM test_ladm_col_queries.op_predio LEFT JOIN test_ladm_col_queries.col_uebaunit ON op_predio.t_id = col_uebaunit.baunit  WHERE col_uebaunit.ue_op_terreno IS NOT NULL AND CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE op_predio.numero_predial_anterior = 'NULL' END
  ),
  predios_seleccionados AS (
-	SELECT col_uebaunit.baunit as t_id FROM test_ladm_col_queries.col_uebaunit WHERE col_uebaunit.ue_op_terreno = 1458 AND '1458' <> 'NULL'
+	SELECT col_uebaunit.baunit as t_id FROM test_ladm_col_queries.col_uebaunit WHERE col_uebaunit.ue_op_terreno = 1377 AND '1377' <> 'NULL'
 		UNION
 	SELECT t_id FROM test_ladm_col_queries.op_predio WHERE CASE WHEN 'NULL' = 'NULL' THEN  1 = 2 ELSE (op_predio.codigo_orip || '-'|| op_predio.matricula_inmobiliaria) = 'NULL' END
 		UNION
@@ -233,4 +233,4 @@ info_puntolevantamiento AS (
 	WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
   ORDER BY op_terreno.t_id
  )
- SELECT json_agg(info_terreno.op_terreno) AS op_terreno FROM info_terreno
+ SELECT json_agg(info_terreno.op_terreno) AS terreno FROM info_terreno
