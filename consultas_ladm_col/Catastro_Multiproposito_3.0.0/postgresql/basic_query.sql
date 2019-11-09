@@ -50,31 +50,23 @@ WITH
 	FROM test_ladm_col_queries.extdireccion WHERE op_unidadconstruccion_ext_direccion_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	GROUP BY extdireccion.op_unidadconstruccion_ext_direccion_id
  ),
- uc_componentes as (
-	 select av_unidad_construccion.op_unidad_construccion,
-	 json_agg(
-				json_build_object('id', av_componente_construccion.t_id,
-									   'attributes', json_build_object('Tipo componente', (SELECT dispname FROM test_ladm_col_queries.av_componenteconstrucciontipo WHERE t_id = av_componente_construccion.tipo_componente),
-																	   'Cantidad', av_componente_construccion.cantidad))
-		ORDER BY av_unidad_construccion.t_id) FILTER(WHERE av_unidad_construccion.t_id IS NOT NULL) AS componentes
-	 from test_ladm_col_queries.av_unidad_construccion LEFT JOIN test_ladm_col_queries.av_componente_construccion
-	 ON av_unidad_construccion.t_id = av_componente_construccion.av_unidad_construccion
-	 WHERE av_unidad_construccion.op_unidad_construccion IN (SELECT * FROM unidadesconstruccion_seleccionadas)
-	 GROUP BY av_unidad_construccion.op_unidad_construccion
- ),
  info_uc AS (
 	 SELECT op_unidadconstruccion.op_construccion,
 			json_agg(json_build_object('id', op_unidadconstruccion.t_id,
-							  'attributes', json_build_object('Número de pisos', op_unidadconstruccion.numero_pisos,
+							  'attributes', json_build_object('Número de pisos', op_unidadconstruccion.total_pisos,
+															  'Número de habitaciones', op_unidadconstruccion.total_habitaciones,
+															  'Número de baños', op_unidadconstruccion.total_banios,
+															  'Número de locales', op_unidadconstruccion.total_locales,
+															  'Tipo construcción', (select dispname from test_ladm_col_queries.OP_ConstruccionTipo where t_id = op_unidadconstruccion.tipo_construccion),
+															  'Tipo unidad de construcción', (select dispname from test_ladm_col_queries.OP_UnidadConstruccionTipo where t_id = op_unidadconstruccion.tipo_unidad_construccion),
+															  'Tipo planta', (select dispname from test_ladm_col_queries.OP_ConstruccionPlantaTipo where t_id = op_unidadconstruccion.tipo_planta),
+															  'Tipo dominio', (select dispname from test_ladm_col_queries.OP_DominioConstruccionTipo where t_id = op_unidadconstruccion.tipo_dominio),
+															  'Ubicación en el piso', op_unidadconstruccion.planta_ubicacion,
 															  CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), op_unidadconstruccion.area_construida,
-															  'av_componente_construccion', COALESCE(uc_componentes.componentes, '[]'),
 															  'Uso', (SELECT dispname FROM test_ladm_col_queries.op_usouconstipo WHERE t_id = op_unidadconstruccion.uso),
-															  'Puntuación', av_unidad_construccion.puntuacion,
 															  'extdireccion', COALESCE(uc_extdireccion.extdireccion, '[]')
 															 )) ORDER BY op_unidadconstruccion.t_id) FILTER(WHERE op_unidadconstruccion.t_id IS NOT NULL)  as unidadconstruccion
 	 FROM test_ladm_col_queries.op_unidadconstruccion
-	 LEFT JOIN test_ladm_col_queries.av_unidad_construccion ON av_unidad_construccion.op_unidad_construccion = op_unidadconstruccion.t_id
-	 LEFT JOIN uc_componentes ON uc_componentes.op_unidad_construccion = op_unidadconstruccion.t_id
 	 LEFT JOIN uc_extdireccion ON op_unidadconstruccion.t_id = uc_extdireccion.op_unidadconstruccion_ext_direccion_id
 	 WHERE op_unidadconstruccion.t_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	 GROUP BY op_unidadconstruccion.op_construccion

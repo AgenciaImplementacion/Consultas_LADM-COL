@@ -47,19 +47,15 @@ WITH
  info_uc AS (
 	 SELECT op_unidadconstruccion.op_construccion,
 			json_agg(json_build_object('id', op_unidadconstruccion.t_id,
-							  'attributes', json_build_object(CONCAT('Avalúo' , (SELECT * FROM unidad_avaluo_uc)), op_unidadconstruccion.avaluo_unidad_construccion
+							  'attributes', json_build_object(CONCAT('Avalúo' , (SELECT * FROM unidad_avaluo_uc)), op_unidadconstruccion.avaluo_construccion
 															  , CONCAT('Área construida' , (SELECT * FROM unidad_area_construida_uc)), op_unidadconstruccion.area_construida
 															  , CONCAT('Área privada construida' , (SELECT * FROM unidad_area_construida_uc)), op_unidadconstruccion.area_privada_construida
-															  , 'Número de pisos', op_unidadconstruccion.numero_pisos
-															  , 'Ubicación en el piso', op_unidadconstruccion.piso_ubicacion
+															  , 'Número de pisos', op_unidadconstruccion.total_pisos
+															  , 'Ubicación en el piso', op_unidadconstruccion.planta_ubicacion
 															  , 'Uso',  (SELECT dispname FROM test_ladm_col_queries.op_usouconstipo WHERE t_id = op_unidadconstruccion.uso)
-															  , 'Tipología',  (SELECT dispname FROM test_ladm_col_queries.av_unidadconstrucciontipo WHERE t_id = av_unidad_construccion.tipo_unidad_construccion)
-															  , 'Puntuación',  av_unidad_construccion.puntuacion
-															  , CONCAT('Valor m2 construcción' , (SELECT * FROM unidad_valor_m2_construccion_u_c)),  av_unidad_construccion.valor_m2_construccion
-															  , 'Año construcción',  av_unidad_construccion.anio_construccion
+															  , 'Año construcción',  op_unidadconstruccion.anio_construccion
 															 )) ORDER BY op_unidadconstruccion.t_id) FILTER(WHERE op_unidadconstruccion.t_id IS NOT NULL)  as op_unidadconstruccion
 	 FROM test_ladm_col_queries.op_unidadconstruccion
-	 LEFT JOIN test_ladm_col_queries.av_unidad_construccion ON op_unidadconstruccion.t_id = av_unidad_construccion.op_unidad_construccion
 	 WHERE op_unidadconstruccion.t_id IN (SELECT * FROM unidadesconstruccion_seleccionadas)
 	 GROUP BY op_unidadconstruccion.op_construccion
  ),
@@ -100,45 +96,14 @@ info_predio AS (
 	 AND col_uebaunit.ue_op_unidadconstruccion IS NULL
 	 GROUP BY col_uebaunit.ue_op_terreno
  ),
- info_zona_homogenea_geoeconomica AS (
-	SELECT op_terreno.t_id,
-		json_agg(
-				json_build_object('id', av_zona_homogenea_geoeconomica.t_id,
-									   'attributes', json_build_object('Porcentaje', ROUND((st_area(st_intersection(op_terreno.poligono_creado, av_zona_homogenea_geoeconomica.geometria))/ st_area(op_terreno.poligono_creado))::numeric * 100,2),
-									                                   'Valor', av_zona_homogenea_geoeconomica.valor,
-																	   'Identificador', av_zona_homogenea_geoeconomica.identificador))
-		ORDER BY av_zona_homogenea_geoeconomica.t_id) FILTER(WHERE av_zona_homogenea_geoeconomica.t_id IS NOT NULL) AS zona_homogenea_geoeconomica
-	FROM test_ladm_col_queries.op_terreno, test_ladm_col_queries.av_zona_homogenea_geoeconomica
-    WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
-		  st_intersects(op_terreno.poligono_creado, av_zona_homogenea_geoeconomica.geometria) = True AND
-		  st_area(st_intersection(op_terreno.poligono_creado, av_zona_homogenea_geoeconomica.geometria)) > 0
-	GROUP BY op_terreno.t_id
- ),
- info_zona_homogenea_fisica AS (
-	SELECT op_terreno.t_id,
-		json_agg(
-				json_build_object('id', av_zona_homogenea_fisica.t_id,
-									   'attributes', json_build_object('Porcentaje', ROUND((st_area(st_intersection(op_terreno.poligono_creado, av_zona_homogenea_fisica.geometria))/ st_area(op_terreno.poligono_creado))::numeric * 100, 2),
-																	   'Identificador', av_zona_homogenea_fisica.identificador))
-		ORDER BY av_zona_homogenea_fisica.t_id) FILTER(WHERE av_zona_homogenea_fisica.t_id IS NOT NULL) AS zona_homogenea_fisica
-	FROM test_ladm_col_queries.op_terreno, test_ladm_col_queries.av_zona_homogenea_fisica
-    WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados) AND
-		  st_intersects(op_terreno.poligono_creado, av_zona_homogenea_fisica.geometria) = True AND
-		  st_area(st_intersection(op_terreno.poligono_creado, av_zona_homogenea_fisica.geometria)) > 0
-	GROUP BY op_terreno.t_id
- ),
  info_terreno AS (
 	SELECT op_terreno.t_id,
       json_build_object('id', op_terreno.t_id,
 						'attributes', json_build_object(CONCAT('Avalúo terreno', (SELECT * FROM unidad_avaluo_terreno)), op_terreno.Avaluo_Terreno
 													    , CONCAT('Área de terreno' , (SELECT * FROM unidad_area_terreno)), op_terreno.area_terreno
-														, 'zona_homogenea_geoeconomica', COALESCE(info_zona_homogenea_geoeconomica.zona_homogenea_geoeconomica, '[]')
-														, 'zona_homogenea_fisica', COALESCE(info_zona_homogenea_fisica.zona_homogenea_fisica, '[]')
 														, 'predio', COALESCE(info_predio.op_predio, '[]')
 													   )) as op_terreno
     FROM test_ladm_col_queries.op_terreno LEFT JOIN info_predio ON info_predio.ue_op_terreno = op_terreno.t_id
-    LEFT JOIN info_zona_homogenea_geoeconomica ON info_zona_homogenea_geoeconomica.t_id = op_terreno.t_id
-    LEFT JOIN info_zona_homogenea_fisica ON info_zona_homogenea_fisica.t_id = op_terreno.t_id
 	WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	ORDER BY op_terreno.t_id
  )
