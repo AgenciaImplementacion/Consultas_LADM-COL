@@ -9,7 +9,7 @@ basic_query_test_results = {
                         "id": 8313,
                         "attributes": {
                             "Tipo dirección": "Estructurada",
-                            "Código postal": null,
+                            "Código postal": None,
                             "Dirección": "Avenida carrera 94 C Norte 65 G 62 Norte Bogota D.C "
                         }
                     },
@@ -17,7 +17,7 @@ basic_query_test_results = {
                         "id": 8314,
                         "attributes": {
                             "Tipo dirección": "Estructurada",
-                            "Código postal": null,
+                            "Código postal": None,
                             "Dirección": "Diagonal 58 I 39 17 Bogota D.C "
                         }
                     }
@@ -30,11 +30,11 @@ basic_query_test_results = {
                             "Departamento": "25",
                             "Municipio": "394",
                             "NUPRE": "0033",
-                            "FMI": null,
+                            "FMI": None,
                             "Número predial": "253940000000000230073000000000",
                             "Número predial anterior": "25394000000230073000",
                             "Tipo": "Privado",
-                            "Destinación económica": null,
+                            "Destinación económica": None,
                             "op_construccion": [
                                 {
                                     "id": 7536,
@@ -45,7 +45,7 @@ basic_query_test_results = {
                                                 "id": 7537,
                                                 "attributes": {
                                                     "Tipo dirección": "Estructurada",
-                                                    "Código postal": null,
+                                                    "Código postal": None,
                                                     "Dirección": "Carrera 18 G Este 23 J 99 Bogota D.C "
                                                 }
                                             },
@@ -53,7 +53,7 @@ basic_query_test_results = {
                                                 "id": 7538,
                                                 "attributes": {
                                                     "Tipo dirección": "Estructurada",
-                                                    "Código postal": null,
+                                                    "Código postal": None,
                                                     "Dirección": "Calle 72 E Norte 89 S 82 Oeste Bogota D.C "
                                                 }
                                             }
@@ -78,7 +78,7 @@ basic_query_test_results = {
                                                             "id": 8415,
                                                             "attributes": {
                                                                 "Tipo dirección": "Estructurada",
-                                                                "Código postal": null,
+                                                                "Código postal": None,
                                                                 "Dirección": "Diagonal 99 M Oeste 51 H 94 Bogota D.C "
                                                             }
                                                         },
@@ -86,7 +86,7 @@ basic_query_test_results = {
                                                             "id": 8416,
                                                             "attributes": {
                                                                 "Tipo dirección": "Estructurada",
-                                                                "Código postal": null,
+                                                                "Código postal": None,
                                                                 "Dirección": "Diagonal 68 N Sur 85 D 3 Norte Bogota D.C "
                                                             }
                                                         }
@@ -121,7 +121,7 @@ basic_query_test_results = {
                                                             "id": 8425,
                                                             "attributes": {
                                                                 "Tipo dirección": "Estructurada",
-                                                                "Código postal": null,
+                                                                "Código postal": None,
                                                                 "Dirección": "Diagonal 29 O Oeste 1 K 67 Bogota D.C "
                                                             }
                                                         }

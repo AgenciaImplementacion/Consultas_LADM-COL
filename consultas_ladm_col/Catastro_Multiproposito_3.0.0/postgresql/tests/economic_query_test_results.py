@@ -13,12 +13,12 @@ economic_query_test_results = {
                             "Departamento": "25",
                             "Municipio": "394",
                             "NUPRE": "0033",
-                            "FMI": null,
+                            "FMI": None,
                             "Número predial": "253940000000000230073000000000",
                             "Número predial anterior": "25394000000230073000",
-                            "Avalúo predio [COP]": null,
+                            "Avalúo predio [COP]": None,
                             "Tipo": "Privado",
-                            "Destinación económica": null,
+                            "Destinación económica": None,
                             "op_construccion": [
                                 {
                                     "id": 7536,

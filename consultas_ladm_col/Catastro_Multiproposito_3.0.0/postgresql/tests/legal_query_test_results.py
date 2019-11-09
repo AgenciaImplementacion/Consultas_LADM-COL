@@ -10,7 +10,7 @@ legal_query_test_results = {
                         "attributes": {
                             "Nombre": "El Pomarroso",
                             "NUPRE": "0033",
-                            "FMI": null,
+                            "FMI": None,
                             "Número predial": "253940000000000230073000000000",
                             "Número predial anterior": "25394000000230073000",
                             "op_derecho": [
@@ -24,7 +24,7 @@ legal_query_test_results = {
                                                 "id": 7615,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura pública",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -37,7 +37,7 @@ legal_query_test_results = {
                                                     "Tipo": "Persona natural",
                                                     "Cédula de ciudadanía": "4",
                                                     "Nombre": "4 4primer apellido 4segundo apellido 4primer nombre 4segundo nombre",
-                                                    "Género": null,
+                                                    "Género": None,
                                                     "interesado_contacto": [
                                                         {
                                                             "id": 7692,
@@ -75,7 +75,7 @@ legal_query_test_results = {
                                                 "id": 7615,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura pública",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18miMzK9"
                                                 }
@@ -88,7 +88,7 @@ legal_query_test_results = {
                                                     "Tipo": "Persona natural",
                                                     "Cédula de ciudadanía": "4",
                                                     "Nombre": "4 4primer apellido 4segundo apellido 4primer nombre 4segundo nombre",
-                                                    "Género": null,
+                                                    "Género": None,
                                                     "interesado_contacto": [
                                                         {
                                                             "id": 7692,
@@ -128,7 +128,7 @@ legal_query_test_results = {
                                                 "id": 7573,
                                                 "attributes": {
                                                     "Tipo de fuente administrativa": "Escritura pública",
-                                                    "Nombre": null,
+                                                    "Nombre": None,
                                                     "Estado disponibilidad": "Disponible",
                                                     "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.18.10h18m064uu"
                                                 }
@@ -146,7 +146,7 @@ legal_query_test_results = {
                                                             "attributes": {
                                                                 "Cédula de ciudadanía": "1",
                                                                 "Nombre": "1 1primer apellido 1segundo apellido 1primer nombre 1segundo nombre",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [
                                                                     {
                                                                         "id": 7691,
@@ -177,7 +177,7 @@ legal_query_test_results = {
                                                             "attributes": {
                                                                 "Cédula de ciudadanía": "36",
                                                                 "Nombre": "36 36primer apellido 36segundo apellido 36primer nombre 36segundo nombre Agricultores S.A.S",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [],
                                                                 "fraccion": 33.33
                                                             }
@@ -187,7 +187,7 @@ legal_query_test_results = {
                                                             "attributes": {
                                                                 "Cédula de ciudadanía": "14",
                                                                 "Nombre": "14 14primer apellido 14segundo apellido 14primer nombre 14segundo nombre",
-                                                                "Género": null,
+                                                                "Género": None,
                                                                 "interesado_contacto": [],
                                                                 "fraccion": 33.33
                                                             }

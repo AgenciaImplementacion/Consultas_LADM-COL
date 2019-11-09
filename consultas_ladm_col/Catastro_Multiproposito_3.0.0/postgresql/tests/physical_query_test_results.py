@@ -10,7 +10,7 @@ physical_query_test_results = {
                         "attributes": {
                             "Nombre": "El Pomarroso",
                             "NUPRE": "0033",
-                            "FMI": null,
+                            "FMI": None,
                             "Número predial": "253940000000000230073000000000",
                             "Número predial anterior": "25394000000230073000",
                             "op_construccion": [
@@ -139,7 +139,7 @@ physical_query_test_results = {
                             "Tipo de fuente espacial": "Datos crudos",
                             "Estado disponibilidad": "Disponible",
                             "Tipo principal": "Mapa",
-                            "Fecha documento": null,
+                            "Fecha documento": None,
                             "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.27.10h11mXrcGr"
                         }
                     },
@@ -149,7 +149,7 @@ physical_query_test_results = {
                             "Tipo de fuente espacial": "Datos crudos",
                             "Estado disponibilidad": "Disponible",
                             "Tipo principal": "Mapa",
-                            "Fecha documento": null,
+                            "Fecha documento": None,
                             "Archivo fuente": "http://portal.proadmintierra.info:18888/filemanager/v1/file/Local?id=default.2019.2.27.10h9m4oDFv"
                         }
                     }
