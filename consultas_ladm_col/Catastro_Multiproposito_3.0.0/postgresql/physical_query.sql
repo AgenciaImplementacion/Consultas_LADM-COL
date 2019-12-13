@@ -232,4 +232,4 @@ info_puntolevantamiento AS (
 	WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
   ORDER BY op_terreno.t_id
  )
- SELECT json_agg(info_terreno.op_terreno) AS terreno FROM info_terreno
+ SELECT json_agg(info_terreno.op_terreno) AS op_terreno FROM info_terreno

@@ -286,4 +286,4 @@ info_restriccion AS (
 	 WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
 	 ORDER BY op_terreno.t_id
  )
-SELECT json_agg(info_terreno.terreno) AS terreno FROM info_terreno
+SELECT json_agg(info_terreno.terreno) AS op_terreno FROM info_terreno
