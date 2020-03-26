@@ -49,8 +49,8 @@ WITH
 									   'attributes', json_build_object('Teléfono 1', op_interesado_contacto.telefono1,
 																	   'Teléfono 2', op_interesado_contacto.telefono2,
 																	   'Domicilio notificación', op_interesado_contacto.domicilio_notificacion,
-																	   'Correo_Electrónico', op_interesado_contacto.correo_electronico,
-																	   'Origen_de_datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
+																	   'Correo electrónico', op_interesado_contacto.correo_electronico,
+																	   'Origen de datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
 		FILTER(WHERE op_interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
 		FROM test_ladm_col_queries.op_interesado_contacto
 		WHERE op_interesado_contacto.op_interesado IN (SELECT derecho_interesados.interesado_op_interesado FROM derecho_interesados)
@@ -65,7 +65,7 @@ WITH
 														  'Nombre', op_interesado.nombre,
 														  CASE WHEN op_interesado.tipo = 9 THEN 'Tipo interesado jurídico' ELSE 'Género' END,
 														  CASE WHEN op_interesado.tipo = 9 THEN (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo) END,
-														  'interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
+														  'op_interesado_contacto', COALESCE(info_contacto_interesados_derecho.interesado_contacto, '[]')))
 	 ORDER BY op_interesado.t_id) FILTER (WHERE op_interesado.t_id IS NOT NULL) AS op_interesado
 	 FROM derecho_interesados LEFT JOIN test_ladm_col_queries.op_interesado ON op_interesado.t_id = derecho_interesados.interesado_op_interesado
    LEFT JOIN test_ladm_col_queries.op_interesadodocumentotipo ON op_interesadodocumentotipo.t_id = op_interesado.tipo_documento
@@ -79,8 +79,8 @@ WITH
 									   'attributes', json_build_object('Teléfono 1', op_interesado_contacto.telefono1,
 																	   'Teléfono 2', op_interesado_contacto.telefono2,
 																	   'Domicilio notificación', op_interesado_contacto.domicilio_notificacion,
-																	   'Correo_Electrónico', op_interesado_contacto.correo_electronico,
-																	   'Origen_de_datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
+																	   'Correo electrónico', op_interesado_contacto.correo_electronico,
+																	   'Origen de datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
 		FILTER(WHERE op_interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
 		FROM test_ladm_col_queries.op_interesado_contacto LEFT JOIN derecho_interesados ON derecho_interesados.interesado_op_interesado = op_interesado_contacto.op_interesado
 		WHERE op_interesado_contacto.op_interesado IN (SELECT DISTINCT derecho_agrupacion_interesados.interesado_op_interesado FROM derecho_agrupacion_interesados)
@@ -90,11 +90,11 @@ WITH
 	 SELECT derecho_agrupacion_interesados.interesado_op_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', op_interesado.t_id,
-						  'attributes', json_build_object(op_interesadodocumentotipo.dispname, op_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo),
+						                                  op_interesadodocumentotipo.dispname, op_interesado.documento_identidad,
 														  'Nombre', op_interesado.nombre,
-														  CASE WHEN op_interesado.tipo = 9 THEN 'Tipo interesado jurídico' ELSE 'Género' END,
-														  CASE WHEN op_interesado.tipo = 9 THEN (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo) END,
-														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
+														  'Género', (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo),
+														  'op_interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_derecho.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY op_interesado.t_id) FILTER (WHERE op_interesado.t_id IS NOT NULL) AS op_interesado
 	 FROM derecho_agrupacion_interesados LEFT JOIN test_ladm_col_queries.op_interesado ON op_interesado.t_id = derecho_agrupacion_interesados.interesado_op_interesado
@@ -123,7 +123,7 @@ WITH
 	 json_agg(
 		json_build_object('id', op_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', (SELECT dispname FROM test_ladm_col_queries.op_fuenteadministrativatipo WHERE t_id = op_fuenteadministrativa.tipo),
-														  'Nombre', op_fuenteadministrativa.ente_emisor,
+														  'Ente emisor', op_fuenteadministrativa.ente_emisor,
 														  'Estado disponibilidad', (SELECT dispname FROM test_ladm_col_queries.col_estadodisponibilidadtipo WHERE t_id = op_fuenteadministrativa.estado_disponibilidad),
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY op_fuenteadministrativa.t_id) FILTER (WHERE op_fuenteadministrativa.t_id IS NOT NULL) AS op_fuenteadministrativa
@@ -141,7 +141,8 @@ info_derecho AS (
 						  'attributes', json_build_object('Tipo de derecho', (SELECT dispname FROM test_ladm_col_queries.op_derechotipo WHERE t_id = op_derecho.tipo),
 														  'Descripción', op_derecho.descripcion,
 														  'op_fuenteadministrativa', COALESCE(info_fuentes_administrativas_derecho.op_fuenteadministrativa, '[]'),
-														  CASE WHEN info_agrupacion_interesados.op_agrupacion_interesados IS NOT NULL THEN 'op_agrupacion_interesados' ELSE 'op_interesado' END, CASE WHEN info_agrupacion_interesados.op_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados.op_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_derecho.op_interesado, '[]') END))
+														  'op_interesado', COALESCE(info_interesados_derecho.op_interesado, '[]'),
+														  'op_agrupacion_interesados', COALESCE(info_agrupacion_interesados.op_agrupacion_interesados, '[]')))
 	 ORDER BY op_derecho.t_id) FILTER (WHERE op_derecho.t_id IS NOT NULL) AS op_derecho
   FROM test_ladm_col_queries.op_derecho LEFT JOIN info_fuentes_administrativas_derecho ON op_derecho.t_id = info_fuentes_administrativas_derecho.t_id
   LEFT JOIN info_interesados_derecho ON op_derecho.t_id = info_interesados_derecho.t_id
@@ -156,8 +157,8 @@ info_derecho AS (
 									   'attributes', json_build_object('Teléfono 1', op_interesado_contacto.telefono1,
 																	   'Teléfono 2', op_interesado_contacto.telefono2,
 																	   'Domicilio notificación', op_interesado_contacto.domicilio_notificacion,
-																	   'Correo_Electrónico', op_interesado_contacto.correo_electronico,
-																	   'Origen_de_datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
+																	   'Correo electrónico', op_interesado_contacto.correo_electronico,
+																	   'Origen de datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
 		FILTER(WHERE op_interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
 		FROM test_ladm_col_queries.op_interesado_contacto
 		WHERE op_interesado_contacto.op_interesado IN (SELECT restriccion_interesados.interesado_op_interesado FROM restriccion_interesados)
@@ -172,7 +173,7 @@ info_derecho AS (
 														  'Nombre', op_interesado.nombre,
 														  CASE WHEN op_interesado.tipo = (SELECT t_id FROM test_ladm_col_queries.op_interesadotipo WHERE ilicode LIKE 'Persona_Juridica') THEN 'Tipo interesado jurídico' ELSE 'Género' END,
 														  CASE WHEN op_interesado.tipo = (SELECT t_id FROM test_ladm_col_queries.op_interesadotipo WHERE ilicode LIKE 'Persona_Juridica') THEN (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo) END,
-														  'interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
+														  'op_interesado_contacto', COALESCE(info_contacto_interesados_restriccion.interesado_contacto, '[]')))
 	 ORDER BY op_interesado.t_id) FILTER (WHERE op_interesado.t_id IS NOT NULL) AS op_interesado
 	 FROM restriccion_interesados LEFT JOIN test_ladm_col_queries.op_interesado ON op_interesado.t_id = restriccion_interesados.interesado_op_interesado
 	 LEFT JOIN test_ladm_col_queries.op_interesadodocumentotipo ON op_interesadodocumentotipo.t_id = op_interesado.tipo_documento
@@ -186,8 +187,8 @@ info_derecho AS (
 									   'attributes', json_build_object('Teléfono 1', op_interesado_contacto.telefono1,
 																	   'Teléfono 2', op_interesado_contacto.telefono2,
 																	   'Domicilio notificación', op_interesado_contacto.domicilio_notificacion,
-																	   'Correo_Electrónico', op_interesado_contacto.correo_electronico,
-																	   'Origen_de_datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
+																	   'Correo electrónico', op_interesado_contacto.correo_electronico,
+																	   'Origen de datos', (SELECT dispname FROM test_ladm_col_queries.op_instituciontipo WHERE t_id = op_interesado_contacto.origen_datos))) ORDER BY op_interesado_contacto.t_id)
 		FILTER(WHERE op_interesado_contacto.t_id IS NOT NULL) AS interesado_contacto
 		FROM test_ladm_col_queries.op_interesado_contacto LEFT JOIN restriccion_interesados ON restriccion_interesados.interesado_op_interesado = op_interesado_contacto.op_interesado
 		WHERE op_interesado_contacto.op_interesado IN (SELECT DISTINCT restriccion_agrupacion_interesados.interesado_op_interesado FROM restriccion_agrupacion_interesados)
@@ -197,11 +198,11 @@ info_derecho AS (
 	 SELECT restriccion_agrupacion_interesados.interesado_op_agrupacion_interesados,
 	  json_agg(
 		json_build_object('id', op_interesado.t_id,
-						  'attributes', json_build_object(op_interesadodocumentotipo.dispname, op_interesado.documento_identidad,
+						  'attributes', json_build_object('Tipo', (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo),
+						                                  op_interesadodocumentotipo.dispname, op_interesado.documento_identidad,
 														  'Nombre', op_interesado.nombre,
-														  CASE WHEN op_interesado.tipo = 9 THEN 'Tipo interesado jurídico' ELSE 'Género' END,
-														  CASE WHEN op_interesado.tipo = 9 THEN (SELECT dispname FROM test_ladm_col_queries.op_interesadotipo WHERE t_id = op_interesado.tipo) ELSE (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo) END,
-														  'interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
+														  'Género', (SELECT dispname FROM test_ladm_col_queries.op_sexotipo WHERE t_id = op_interesado.sexo),
+														  'op_interesado_contacto', COALESCE(info_contacto_interesado_agrupacion_interesados_restriccion.interesado_contacto, '[]'),
 														  'fraccion', ROUND((fraccion.numerador::numeric/fraccion.denominador::numeric)*100,2) ))
 	 ORDER BY op_interesado.t_id) FILTER (WHERE op_interesado.t_id IS NOT NULL) AS op_interesado
 	 FROM restriccion_agrupacion_interesados LEFT JOIN test_ladm_col_queries.op_interesado ON op_interesado.t_id = restriccion_agrupacion_interesados.interesado_op_interesado
@@ -230,7 +231,7 @@ info_derecho AS (
 	 json_agg(
 		json_build_object('id', op_fuenteadministrativa.t_id,
 						  'attributes', json_build_object('Tipo de fuente administrativa', (SELECT dispname FROM test_ladm_col_queries.op_fuenteadministrativatipo WHERE t_id = op_fuenteadministrativa.tipo),
-														  'Nombre', op_fuenteadministrativa.ente_emisor,
+														  'Ente emisor', op_fuenteadministrativa.ente_emisor,
 														  'Estado disponibilidad', (SELECT dispname FROM test_ladm_col_queries.col_estadodisponibilidadtipo WHERE t_id = op_fuenteadministrativa.estado_disponibilidad),
 														  'Archivo fuente', extarchivo.datos))
 	 ORDER BY op_fuenteadministrativa.t_id) FILTER (WHERE op_fuenteadministrativa.t_id IS NOT NULL) AS op_fuenteadministrativa
@@ -248,7 +249,8 @@ info_restriccion AS (
 						  'attributes', json_build_object('Tipo de restricción', (SELECT dispname FROM test_ladm_col_queries.op_restricciontipo WHERE t_id = op_restriccion.tipo),
 														  'Descripción', op_restriccion.descripcion,
 														  'op_fuenteadministrativa', COALESCE(info_fuentes_administrativas_restriccion.op_fuenteadministrativa, '[]'),
-														  CASE WHEN info_agrupacion_interesados_restriccion.op_agrupacion_interesados IS NOT NULL THEN 'op_agrupacion_interesados' ELSE 'op_interesado' END, CASE WHEN info_agrupacion_interesados_restriccion.op_agrupacion_interesados IS NOT NULL THEN COALESCE(info_agrupacion_interesados_restriccion.op_agrupacion_interesados, '[]') ELSE COALESCE(info_interesados_restriccion.op_interesado, '[]') END))
+														  'op_interesado', COALESCE(info_interesados_restriccion.op_interesado, '[]'),
+														  'op_agrupacion_interesados', COALESCE(info_agrupacion_interesados_restriccion.op_agrupacion_interesados, '[]')))
 	 ORDER BY op_restriccion.t_id) FILTER (WHERE op_restriccion.t_id IS NOT NULL) AS op_restriccion
   FROM test_ladm_col_queries.op_restriccion LEFT JOIN info_fuentes_administrativas_restriccion ON op_restriccion.t_id = info_fuentes_administrativas_restriccion.t_id
   LEFT JOIN info_interesados_restriccion ON op_restriccion.t_id = info_interesados_restriccion.t_id
@@ -279,8 +281,8 @@ info_restriccion AS (
  info_terreno AS (
 	 SELECT op_terreno.t_id,
 	 json_build_object('id', op_terreno.t_id,
-						'attributes', json_build_object(CONCAT('Área de terreno' , (SELECT * FROM unidad_area_terreno)), op_terreno.area_terreno,
-														'predio', COALESCE(info_predio.predio, '[]')
+						'attributes', json_build_object(CONCAT('Área' , (SELECT * FROM unidad_area_terreno)), op_terreno.area_terreno,
+														'op_predio', COALESCE(info_predio.predio, '[]')
 													   )) as terreno
 	 FROM test_ladm_col_queries.op_terreno LEFT JOIN info_predio ON op_terreno.t_id = info_predio.ue_op_terreno
 	 WHERE op_terreno.t_id IN (SELECT * FROM terrenos_seleccionados)
