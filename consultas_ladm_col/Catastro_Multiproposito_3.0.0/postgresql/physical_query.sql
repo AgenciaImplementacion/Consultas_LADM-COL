@@ -192,18 +192,18 @@ _info_punto_lindero_externos AS (
 _info_puntolevantamiento AS (
 	SELECT _t_id_terreno_,
             JSON_AGG(
-                    JSON_BUILD_OBJECT('id', puntoslevantamiento_seleccionados._t_id_puntolevantamiento_,
-                                           'attributes', JSON_BUILD_OBJECT('Coordenadas', concat(st_x(puntoslevantamiento_seleccionados.geometria),
-                                                                                     ' ', st_y(puntoslevantamiento_seleccionados.geometria),
-                                                                                     CASE WHEN st_z(puntoslevantamiento_seleccionados.geometria) IS NOT NULL THEN concat(' ', st_z(puntoslevantamiento_seleccionados.geometria)) END)
+                    JSON_BUILD_OBJECT('id', _puntoslevantamiento_seleccionados._t_id_puntolevantamiento_,
+                                           'attributes', JSON_BUILD_OBJECT('Coordenadas', concat(st_x(_puntoslevantamiento_seleccionados._geometria_),
+                                                                                     ' ', st_y(_puntoslevantamiento_seleccionados._geometria_),
+                                                                                     CASE WHEN st_z(_puntoslevantamiento_seleccionados._geometria_) IS NOT NULL THEN concat(' ', st_z(_puntoslevantamiento_seleccionados._geometria_)) END)
                                                                           ))
-            ORDER BY puntoslevantamiento_seleccionados._t_id_puntolevantamiento_) FILTER(WHERE puntoslevantamiento_seleccionados._t_id_puntolevantamiento_ IS NOT NULL) AS _puntolevantamiento_
+            ORDER BY _puntoslevantamiento_seleccionados._t_id_puntolevantamiento_) FILTER(WHERE _puntoslevantamiento_seleccionados._t_id_puntolevantamiento_ IS NOT NULL) AS _puntolevantamiento_
     FROM
     (
-        SELECT lc_puntolevantamiento.t_id AS _t_id_puntolevantamiento_, lc_puntolevantamiento.geometria, lc_terreno.t_id AS _t_id_terreno_
+        SELECT lc_puntolevantamiento.t_id AS _t_id_puntolevantamiento_, lc_puntolevantamiento.geometria as _geometria_, lc_terreno.t_id AS _t_id_terreno_
         FROM test_ladm_col_queries.lc_terreno, test_ladm_col_queries.lc_puntolevantamiento
         WHERE ST_Intersects(lc_terreno.geometria, lc_puntolevantamiento.geometria) AND lc_terreno.t_id IN (SELECT * FROM _terrenos_seleccionados)
-    ) AS puntoslevantamiento_seleccionados
+    ) AS _puntoslevantamiento_seleccionados
     GROUP BY _t_id_terreno_
 ),
  _info_terreno AS (
