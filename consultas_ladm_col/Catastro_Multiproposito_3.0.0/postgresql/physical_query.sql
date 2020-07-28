@@ -37,17 +37,17 @@ WITH
  ),
 _punto_lindero_externos_seleccionados AS (
 	 SELECT DISTINCT col_masccl.ue_mas_lc_terreno, lc_puntolindero.t_id
-	 FROM test_ladm_col_queries.lc_puntolindero LEFT JOIN test_ladm_col_queries.col_puntoccl ON lc_puntolindero.t_id = col_puntoccl.punto_lc_puntolindero
-	 LEFT JOIN test_ladm_col_queries.lc_lindero ON col_puntoccl.ccl = lc_lindero.t_id
-	 LEFT JOIN test_ladm_col_queries.col_masccl ON lc_lindero.t_id = col_masccl.ccl_mas
+	 FROM test_ladm_col_queries.lc_puntolindero JOIN test_ladm_col_queries.col_puntoccl ON lc_puntolindero.t_id = col_puntoccl.punto_lc_puntolindero
+	 JOIN test_ladm_col_queries.lc_lindero ON col_puntoccl.ccl = lc_lindero.t_id
+	 JOIN test_ladm_col_queries.col_masccl ON lc_lindero.t_id = col_masccl.ccl_mas
 	 WHERE col_masccl.ue_mas_lc_terreno IN (SELECT * FROM _terrenos_seleccionados)
 	 ORDER BY col_masccl.ue_mas_lc_terreno, lc_puntolindero.t_id
 ),
 _punto_lindero_internos_seleccionados AS (
 	SELECT DISTINCT col_menosccl.ue_menos_lc_terreno, lc_puntolindero.t_id
-	FROM test_ladm_col_queries.lc_puntolindero LEFT JOIN test_ladm_col_queries.col_puntoccl ON lc_puntolindero.t_id = col_puntoccl.punto_lc_puntolindero
-	LEFT JOIN test_ladm_col_queries.lc_lindero ON col_puntoccl.ccl = lc_lindero.t_id
-	LEFT JOIN test_ladm_col_queries.col_menosccl ON lc_lindero.t_id = col_menosccl.ccl_menos
+	FROM test_ladm_col_queries.lc_puntolindero JOIN test_ladm_col_queries.col_puntoccl ON lc_puntolindero.t_id = col_puntoccl.punto_lc_puntolindero
+	JOIN test_ladm_col_queries.lc_lindero ON col_puntoccl.ccl = lc_lindero.t_id
+	JOIN test_ladm_col_queries.col_menosccl ON lc_lindero.t_id = col_menosccl.ccl_menos
 	WHERE col_menosccl.ue_menos_lc_terreno IN (SELECT * FROM _terrenos_seleccionados)
   ORDER BY col_menosccl.ue_menos_lc_terreno, lc_puntolindero.t_id
 ),
@@ -149,7 +149,7 @@ _info_uc AS (
 				JSON_BUILD_OBJECT('id', lc_lindero.t_id,
 									   'attributes', JSON_BUILD_OBJECT(CONCAT('Longitud' , (SELECT * FROM _unidad_longitud_lindero)), lc_lindero.longitud))
 		ORDER BY lc_lindero.t_id) FILTER(WHERE lc_lindero.t_id IS NOT NULL) AS _lindero_
-	FROM test_ladm_col_queries.lc_lindero LEFT JOIN test_ladm_col_queries.col_masccl ON lc_lindero.t_id = col_masccl.ccl_mas
+	FROM test_ladm_col_queries.lc_lindero JOIN test_ladm_col_queries.col_masccl ON lc_lindero.t_id = col_masccl.ccl_mas
     WHERE col_masccl.ue_mas_lc_terreno IN (SELECT * FROM _terrenos_seleccionados)
 	GROUP BY col_masccl.ue_mas_lc_terreno
  ),
@@ -159,7 +159,7 @@ _info_uc AS (
 				JSON_BUILD_OBJECT('id', lc_lindero.t_id,
 									   'attributes', JSON_BUILD_OBJECT(CONCAT('Longitud' , (SELECT * FROM _unidad_longitud_lindero)), lc_lindero.longitud))
 		ORDER BY lc_lindero.t_id) FILTER(WHERE lc_lindero.t_id IS NOT NULL) AS _lindero_
-	FROM test_ladm_col_queries.lc_lindero LEFT JOIN test_ladm_col_queries.col_menosccl ON lc_lindero.t_id = col_menosccl.ccl_menos
+	FROM test_ladm_col_queries.lc_lindero JOIN test_ladm_col_queries.col_menosccl ON lc_lindero.t_id = col_menosccl.ccl_menos
 	WHERE col_menosccl.ue_menos_lc_terreno IN (SELECT * FROM _terrenos_seleccionados)
 	GROUP BY col_menosccl.ue_menos_lc_terreno
  ),
@@ -172,7 +172,7 @@ _info_punto_lindero_externos AS (
 																					 ' ', st_y(lc_puntolindero.geometria),
 																					 CASE WHEN st_z(lc_puntolindero.geometria) IS NOT NULL THEN concat(' ', st_z(lc_puntolindero.geometria)) END))
 			) ORDER BY lc_puntolindero.t_id) FILTER(WHERE lc_puntolindero.t_id IS NOT NULL) AS _puntolindero_
-	FROM test_ladm_col_queries.lc_puntolindero LEFT JOIN _punto_lindero_externos_seleccionados ON lc_puntolindero.t_id = _punto_lindero_externos_seleccionados.t_id
+	FROM test_ladm_col_queries.lc_puntolindero JOIN _punto_lindero_externos_seleccionados ON lc_puntolindero.t_id = _punto_lindero_externos_seleccionados.t_id
 	WHERE _punto_lindero_externos_seleccionados.ue_mas_lc_terreno IS NOT NULL
 	GROUP BY _punto_lindero_externos_seleccionados.ue_mas_lc_terreno
  ),
@@ -185,7 +185,7 @@ _info_punto_lindero_externos AS (
 																					 ' ', st_y(lc_puntolindero.geometria),
 																					 CASE WHEN st_z(lc_puntolindero.geometria) IS NOT NULL THEN concat(' ', st_z(lc_puntolindero.geometria)) END))
 			) ORDER BY lc_puntolindero.t_id) FILTER(WHERE lc_puntolindero.t_id IS NOT NULL) AS _puntolindero_
-	 FROM test_ladm_col_queries.lc_puntolindero LEFT JOIN _punto_lindero_internos_seleccionados ON lc_puntolindero.t_id = _punto_lindero_internos_seleccionados.t_id
+	 FROM test_ladm_col_queries.lc_puntolindero JOIN _punto_lindero_internos_seleccionados ON lc_puntolindero.t_id = _punto_lindero_internos_seleccionados.t_id
      WHERE _punto_lindero_internos_seleccionados.ue_menos_lc_terreno IS NOT NULL
 	 GROUP BY _punto_lindero_internos_seleccionados.ue_menos_lc_terreno
  ),
