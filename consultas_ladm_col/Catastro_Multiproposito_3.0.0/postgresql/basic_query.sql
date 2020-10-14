@@ -159,4 +159,4 @@ WITH
 	WHERE lc_terreno.t_id IN (SELECT * FROM _terrenos_seleccionados)
 	ORDER BY lc_terreno.t_id
  )
- SELECT JSON_AGG(_info_terreno._terreno_) AS lc_terreno FROM _info_terreno
+ SELECT JSON_BUILD_OBJECT('lc_terreno', COALESCE(JSON_AGG(_info_terreno._terreno_), '[]')) FROM _info_terreno
